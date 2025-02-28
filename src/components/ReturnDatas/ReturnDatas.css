@@ -1,0 +1,22 @@
+.Dictionary__definition {
+  margin-bottom: 20px;
+}
+.Dictionary__definition__hr {
+  padding-bottom: 12px;
+  -webkit-box-flex: 20;
+      -ms-flex-positive: 20;
+          flex-grow: 20;
+}
+
+@media only screen and (min-width: 768px) {
+  .Dictionary__definition__hr {
+    width: 608px;
+    height: 1px;
+  }
+}
+@media only screen and (min-width: 1440px) {
+  .Dictionary__definition__hr {
+    width: 656px;
+    height: 1px;
+  }
+}
