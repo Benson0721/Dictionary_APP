@@ -19,7 +19,7 @@
       -ms-flex-align: center;
           align-items: center;
 }
-.Dictionary__navbar__toggle {
+.Dictionary__navbar-toggle {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -27,30 +27,30 @@
   border-right: 1px solid #e9e9e9;
   padding: 0 26px;
 }
-.Dictionary__navbar__toggle-moon {
+.Dictionary__navbar-toggle__moon {
   margin-left: 16px;
   width: 24px;
   height: 24px;
 }
-.Dictionary__navbar__toggle-space {
+.Dictionary__navbar-toggle__space {
   position: relative;
   display: inline-block;
   width: 45px;
   height: 23px;
 }
-.Dictionary__navbar__toggle input {
+.Dictionary__navbar-toggle input {
   opacity: 0;
   width: 0;
   height: 0;
 }
-.Dictionary__navbar__toggle input:checked + .Dictionary__navbar__toggle-switch {
+.Dictionary__navbar-toggle input:checked + .Dictionary__navbar-toggle__switch {
   background-color: #a445ed;
 }
-.Dictionary__navbar__toggle input:checked + .Dictionary__navbar__toggle-switch::before {
+.Dictionary__navbar-toggle input:checked + .Dictionary__navbar-toggle__switch::before {
   -webkit-transform: translateX(18px);
           transform: translateX(18px);
 }
-.Dictionary__navbar__toggle-switch {
+.Dictionary__navbar-toggle__switch {
   position: absolute;
   inset: 0;
   cursor: pointer;
@@ -59,7 +59,7 @@
   -webkit-transition: 0.4s ease;
   transition: 0.4s ease;
 }
-.Dictionary__navbar__toggle-switch::before {
+.Dictionary__navbar-toggle__switch::before {
   content: "";
   position: absolute;
   top: 3px;
@@ -71,43 +71,111 @@
   -webkit-transition: 0.4s ease;
   transition: 0.4s ease;
 }
-.Dictionary__navbar__selector {
+.Dictionary__navbar-font {
   border: none;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
   background-color: transparent;
 }
-.Dictionary__navbar__selector:focus {
-  outline: none;
+.Dictionary__navbar-font__box {
+  position: relative;
+  width: 125px;
+  height: 24px;
 }
-.Dictionary__navbar__selector option {
+.Dictionary__navbar-font option {
   padding: 10px;
 }
-.Dictionary__navbar__selector-box {
-  position: relative;
-  margin-right: 10px;
-  font-weight: bold;
-}
-.Dictionary__navbar__selector-toggler {
+.Dictionary__navbar-font__toggler {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 9px;
+  right: 10px;
 }
-.Dictionary__navbar__user {
+.Dictionary__navbar-font__selector-box {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  border-radius: 16px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  top: 45px;
+  right: -10px;
+  -webkit-box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  z-index: 1;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
-.Dictionary__navbar__user__avatar {
+.Dictionary__navbar-font__selector__item {
+  padding: 15px 69px 15px 24px;
+}
+.Dictionary__navbar-font__selector--open {
+  opacity: 1;
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+}
+.Dictionary__navbar-font__selector--close {
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+}
+.Dictionary__navbar-user {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+}
+.Dictionary__navbar-user__avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   border: 2px solid black;
 }
-.Dictionary__navbar__user__name {
+.Dictionary__navbar-user__name {
   padding-right: 8px;
   margin-left: 16px;
   margin-right: 8px;
-  border-right: 1px solid #e9e9e9;
+}
+.Dictionary__navbar-user__toggler {
+  position: absolute;
+  top: 13px;
+  right: -10px;
+}
+.Dictionary__navbar-user__menu-box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: 16px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  top: 45px;
+  right: -10px;
+  -webkit-box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  z-index: 1;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.Dictionary__navbar-user__menu__item {
+  padding: 15px 69px 15px 24px;
+}
+.Dictionary__navbar-user__menu--open {
+  opacity: 1;
+  -webkit-transform: translateY(10px);
+          transform: translateY(10px);
+}
+.Dictionary__navbar-user__menu--close {
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
 }

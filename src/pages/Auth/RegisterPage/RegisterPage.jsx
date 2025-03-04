@@ -2,12 +2,12 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { RegisterRule } from "../../../utils/Rules";
 
-import { signUp } from "../Auth";
 import "./RegisterPage.css";
-import localforage from "localforage";
+
 import { useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../hooks/AuthContext";
+import { useActionData, useSubmit } from "react-router";
 
 /*export async function action({ request }) {
   const formData = await request.formData();
@@ -34,35 +34,34 @@ export default function RegisterPage() {
 
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  const onSubmit = async (data) => {
-    const result = await signUp(data);
-    if (result?.error) {
-      setErrorMessage(result.error);
-    } else {
-      setErrorMessage(null);
-      await localforage.setItem("user", {
-        id: result._id,
-        username: result.username,
-      });
-      const newUser = { id: result._id, username: result.username };
-      await localforage.setItem("user", newUser);
-      setUser(newUser);
+  const actionData = useActionData();
+  const submit = useSubmit();
+  console.log(actionData);
+  useEffect(() => {
+    if (actionData?.id && actionData?.username) {
+      setUser(actionData);
       navigate("/dictionary");
     }
+
+    if (actionData?.error) {
+      console.log(actionData.error);
+    }
+  }, [actionData, setUser, navigate]);
+
+  const onSubmit = async (data) => {
+    submit(data, { action: "/register", method: "POST" });
   };
 
   return (
     <>
       <div className="RegisterPage">
-        {errorMessage && errorMessage.length > 0 && (
+        {actionData?.error && actionData?.error.length > 0 && (
           <p
             className=" text-Orange-1 text-[16px]  text-center"
             aria-live="polite"
             role="alert"
           >
-            {errorMessage}
+            {actionData.error}
           </p>
         )}
         <form onSubmit={handleSubmit(onSubmit)}>

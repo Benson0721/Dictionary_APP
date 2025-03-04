@@ -1,32 +1,33 @@
 import express from "express";
-import { getFavorite } from "../apis/FavApis";
-
+import {
+  getFavoriteLists,
+  addFavoriteList,
+  updateFavoriteList,
+  deleteFavoriteList,
+} from "../apis/FavListApis";
+import {
+  getFavoriteWords,
+  removeFavoriteWord,
+  addFavoriteWord,
+} from "../apis/FavApis";
 
 const router = express.Router();
-router.get("/favorite", (req, res) => {
-  getFavorite(req, res);
-  console.log("route觸發");
-});
 
-router.post("/favorite", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) return next(err);
+router
+  .route("/:userID/lists")
+  .get(getFavoriteLists) // 取得使用者的所有清單
+  .post(addFavoriteList); // 新增一個清單
 
-    if (!user) {
-      return res
-        .status(401)
-        .json({ error: info.message || "Invalid credentails" });
-    }
+router
+  .route("/:userID/lists/:listID")
+  .get(getFavoriteWords) // 取得該清單內的所有單字
+  .patch(updateFavoriteList) // 更新該清單
+  .delete(deleteFavoriteList); // 刪除該清單
 
-    req.login(user, (err) => {
-      if (err) return next(err);
-      res.json(user);
-    });
-  })(req, res, next);
-});
-router.delete("/favorite", (req, res) => {
-  //console.log(req)
-  logout(req, res);
-});
+router.route("/:userID/lists/:listID/favorites").post(addFavoriteWord); // 在清單內新增單字
+
+router
+  .route("/:userID/lists/:listID/favorites/:wordID")
+  .delete(removeFavoriteWord); // 從清單內刪除單字
 
 export { router };

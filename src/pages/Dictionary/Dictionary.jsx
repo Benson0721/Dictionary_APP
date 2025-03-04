@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar/Navbar.jsx";
 import Search from "../../components/Search/Search.jsx";
+import FavListDrawer from "../Favorite/FavListDrawer.jsx";
 import { HeadingL } from "../../components/Headings.jsx";
 import { BodyS, BodyS_a } from "../../components/Bodys.jsx";
 import {
@@ -19,11 +20,12 @@ export default function Dictionary() {
   const [font, setFont] = useState("Inter"); //change web font
   const { word, WordHandler } = useContext(DictionaryContext); //get word and handler by using useContent
   const { isNight } = useContext(ThemeContext);
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [phoneticData, setPhoneticData] = useState(null); //extract data form word
   const [meaningsData, setMeaningsData] = useState(null); //extract data form word
   const [isLoading, setIsLoading] = useState(true); //waiting data fetch
   const [isSuccess, setIsSuccess] = useState(false); //is fetch success or not
+  const [openDrawer, setOpenDrawer] = useState(false);
   const [currentSearch, setCurrentSearch] = useState(""); //is fetch success or not
   const [history, setHistory] = useState([]);
   const { vocabulary, phonetics, meanings, sourceUrls } = word;
@@ -99,7 +101,8 @@ export default function Dictionary() {
   return (
     <div className={`Dictionary-bg ${isNight ? "bg-Black-1" : "bg-white"}`}>
       <main className={`Dictionary font-${font}`}>
-        <Navbar setFont={setFont} />
+        <FavListDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+        <Navbar setFont={setFont} font={font} />
         <Search
           setIsSuccess={setIsSuccess}
           currentSearch={currentSearch}
@@ -116,6 +119,8 @@ export default function Dictionary() {
                   <HeadingL
                     vocubulary={vocabulary}
                     phoneticText={phoneticData?.text || null}
+                    setOpenDrawer={setOpenDrawer}
+                    openDrawer={openDrawer}
                   />
                   <AudioPlayer audioSrc={phoneticData?.audio || null} />
                 </div>

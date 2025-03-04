@@ -1,67 +1,52 @@
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { login } from "../Auth";
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { LoginRule } from "../../../utils/Rules";
 import { useNavigate } from "react-router";
 import AuthContext from "../../../hooks/AuthContext";
 import localforage from "localforage";
+import { useSubmit, useActionData } from "react-router";
+
 import "./LoginPage.css";
-
-
-export async function action({ request }) {
-  const formData = await request.formData();
-  const userData = Object.fromEntries(formData);
-  try {
-    const user = await login(userData);
-    if (user.error) {
-      //又沒辦法使用useState
-    } else {
-      await localforage.setItem("user", JSON.stringify(user._id));
-      return redirect(`/dictionary`);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 
 export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm({ resolver: joiResolver(LoginRule) });
 
-  const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const actionData = useActionData();
+  console.log(actionData);
+  const submit = useSubmit();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (actionData?.id && actionData?.username) {
+      setUser(actionData); // 更新全域用戶資料
+      navigate("/dictionary"); // 登入成功後重導至字典頁面
+    }
+
+    if (actionData?.error) {
+      console.log(actionData.error); // 處理錯誤
+    }
+  }, [actionData, setUser, navigate]);
 
   const onSubmit = async (data) => {
-    const result = await login(data);
-    console.log(result);
-    if (result?.error) {
-      setErrorMessage(result.error);
-    } else {
-      setErrorMessage(null);
-      const newUser = { id: result._id, username: result.username };
-      await localforage.setItem("user", newUser);
-      setUser(newUser);
-      navigate("/dictionary");
-    }
+    submit(data, { action: "/login", method: "POST" });
   };
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {errorMessage && errorMessage.length > 0 && (
+        {actionData?.error && actionData?.error.length > 0 && (
           <p
             className=" text-Orange-1 text-[16px]  text-center"
             aria-live="polite"
             role="alert"
           >
-            {errorMessage}
+            {actionData.error}
           </p>
         )}
         <section>

@@ -1,17 +1,39 @@
 import { useContext, useState } from "react";
 import ThemeContext from "../hooks/ThemeContext";
+import DictionaryContext from "../hooks/DictionaryContext";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { pink } from "@mui/material/colors";
 import { IconButton } from "@mui/material";
+import FavoriteContext from "../hooks/FavoriteContext";
 
-
-export function HeadingL({ vocubulary, phoneticText, spacing }) {
+export function HeadingL({
+  vocubulary,
+  phoneticText,
+  spacing,
+  setOpenDrawer,
+  openDrawer,
+}) {
   const { isNight } = useContext(ThemeContext);
+  const { toggleFavorites } = useContext(FavoriteContext);
+  const { word } = useContext(DictionaryContext);
   const [isFav, setIsFav] = useState(false);
   const heartStyle = {
     color: pink[500],
     fontSize: 30,
+  };
+
+  const handleToggleFavorites = async (word) => {
+    setIsFav((prev) => !prev);
+    try {
+      await toggleFavorites(word);
+    } catch (e) {
+      console.error(
+        "Error in toggleFavorites:",
+        e.response?.data?.error || e.message
+      );
+      setIsFav((prev) => !prev);
+    }
   };
 
   return (
@@ -24,7 +46,7 @@ export function HeadingL({ vocubulary, phoneticText, spacing }) {
         >
           {vocubulary}
         </h1>
-        <IconButton id="margin" onClick={() => setIsFav(() => !isFav)}>
+        <IconButton id="margin" onClick={() => setOpenDrawer(!openDrawer)}>
           {isFav ? (
             <FavoriteIcon sx={heartStyle} />
           ) : (

@@ -19,6 +19,7 @@ router.post("/register", (req, res) => {
   }
 );*/
 router.post("/login", (req, res, next) => {
+  console.log("login觸發");
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
 

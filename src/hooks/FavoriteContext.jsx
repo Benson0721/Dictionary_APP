@@ -1,6 +1,10 @@
-import { createContext, useState } from "react";
-
-
+import { createContext, useEffect, useState } from "react";
+import {
+  addFavorite,
+  getFavorite,
+  removeFavorite,
+} from "../pages/Favorite/FavoriteWords";
+import localforage from "localforage";
 
 const FavoriteContext = createContext({
   favorite: {},
@@ -8,38 +12,65 @@ const FavoriteContext = createContext({
 });
 
 export const FavoriteContentProvider = (props) => {
-  const [favorite, setfavorite] = useState([]);
+  const [lists, setLists] = useState([]);
+  const [currentList, setCurrentList] = useState(null);
+  const [favorites, setFavorites] = useState([]);
 
-  const favHandler = (word) => {
-    const newFavorite = [...favorite, word];
-    setfavorite(newFavorite);
-
-  };
-
-  
-  const handleSearch = (newWord) => {
-    setCurrentSearch(newWord);
-    setHistory((prevHistory) => {
-      const newHistory = [newWord, ...prevHistory];
-      if (prevHistory.includes(newWord)) {
-        const newprev = prevHistory.filter((word) => word != newWord);
-        const newHistory = [newWord, ...newprev];
-        console.log(history);
-        return newHistory.slice(0, 5);
-      } else {
-        console.log(history);
-        return newHistory.slice(0, 5);
+  /*useEffect(() => {
+    const fetchLists = async () => {
+      const user = await localforage.getItem("user");
+      if (user) {
+        const favwords = await getFavorite(user.id);
+        setFavorites(favwords);
       }
+    };
+    fetchList();
+  }, []);*/
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      const user = await localforage.getItem("user");
+      if (user) {
+        const favwords = await getFavorite(user.id);
+        setFavorites(favwords);
+      }
+    };
+    fetchFavorites();
+  }, []);
+
+  const toggleFavorites = async (word) => {
+    //調動ui state
+    const { vocabulary, phonetics } = word;
+    const wordData = { word: vocabulary, audio: phonetics.audio };
+    setFavorites((prev) => {
+      const isFav = prev.includes(wordData);
+      const newFavorites = isFav
+        ? prev.filter((item) => item !== wordData)
+        : [...prev, wordData];
+      return newFavorites;
     });
+
+    try {
+      //判斷是否登入
+      const user = await localforage.getItem("user");
+      if (user) {
+        const isFav = favorites.includes(wordData);
+        isFav
+          ? await deleteFavorite(user.id, wordData)
+          : await addFavorite(user.id, wordData);
+      }
+    } catch (e) {
+      console.error("Failed to update favorites:", error);
+    }
   };
 
   return (
     <FavoriteContext.Provider
-      value={{ favorite: favorite, favHandler: favHandler }}
+      value={{ favorites: favorites, toggleFavorites: toggleFavorites }}
     >
       {props.children}
     </FavoriteContext.Provider>
   );
 };
 
-export default DictionaryContext;
+export default FavoriteContext;
