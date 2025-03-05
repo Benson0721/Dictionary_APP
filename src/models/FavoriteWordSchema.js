@@ -16,6 +16,10 @@ const FavoriteWordSchema = new Schema({
       ref: "FavoriteLists",
     },
   ],
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 export const FavoriteWord = mongoose.model("FavoriteWord", FavoriteWordSchema);

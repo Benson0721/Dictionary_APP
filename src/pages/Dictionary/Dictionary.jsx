@@ -14,6 +14,8 @@ import AudioPlayer from "../../components/AudioPlayer/AudioPlayer.jsx";
 import { fetchWordData } from "../../utils/fetchWordData.js";
 import WordHistory from "../../components/WordHistory.jsx";
 import AuthContext from "../../hooks/AuthContext.jsx";
+import FavoriteListsContext from "../../hooks/FavoriteListsContext.jsx";
+import FavoriteWordsContext from "../../hooks/FavoriteWordsContext.jsx";
 import "./Dictionary.css";
 
 export default function Dictionary() {
@@ -29,6 +31,8 @@ export default function Dictionary() {
   const [currentSearch, setCurrentSearch] = useState(""); //is fetch success or not
   const [history, setHistory] = useState([]);
   const { vocabulary, phonetics, meanings, sourceUrls } = word;
+  const { fetchLists, lists, toggleHeart, favoriteWords } =
+    useContext(FavoriteListsContext);
 
   useEffect(() => {
     async function welcome() {
@@ -45,6 +49,25 @@ export default function Dictionary() {
     }
     welcome();
   }, []);
+
+  useEffect(() => {
+    const handleFetchLists = async () => {
+      console.log("fetch");
+      await fetchLists();
+    };
+
+    if (user && user.length > 0) {
+      handleFetchLists();
+    }
+  }, [user, lists, word]);
+
+  useEffect(() => {
+    const handleHeart = async () => {
+      await toggleHeart();
+    };
+
+    handleHeart();
+  }, [favoriteWords]);
 
   useEffect(() => {
     //processing word data

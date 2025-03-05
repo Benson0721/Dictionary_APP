@@ -4,12 +4,12 @@ import {
   addFavoriteList,
   updateFavoriteList,
   deleteFavoriteList,
-} from "../apis/FavListApis";
+} from "../apis/FavListApis.js";
 import {
   getFavoriteWords,
   removeFavoriteWord,
   addFavoriteWord,
-} from "../apis/FavApis";
+} from "../apis/FavApis.js";
 
 const router = express.Router();
 

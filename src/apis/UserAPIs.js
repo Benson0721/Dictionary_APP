@@ -1,15 +1,23 @@
 import { User } from "../models/UserSchema.js";
+
 /*export const login = (req, res) => {
   res.send(req.user);
 };*/
 
 export const logout = (req, res) => {
-  req.user = null;
   req.logout(function (err) {
     if (err) {
       return next(err);
     }
-    res.send("logout");
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      console.log(req.user);
+      console.log(req.session);
+      res.clearCookie("connect.sid"); // 確保 session cookie 被刪除
+      res.json({ message: "Logged out" });
+    });
   });
 };
 

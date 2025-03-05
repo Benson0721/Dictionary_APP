@@ -7,7 +7,7 @@ async function signUp(url, userData) {
     const { email, username, password } = userData;
     console.log(userData);
     console.log("前端api 接收ok");
-    const response = await axios.post(`${url}/auth/register`, {
+    const response = await axios.post(`${url}/api/register`, {
       email,
       username,
       password,

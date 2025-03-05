@@ -5,7 +5,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { pink } from "@mui/material/colors";
 import { IconButton } from "@mui/material";
-import FavoriteContext from "../hooks/FavoriteContext";
+import FavoriteListsContext from "../hooks/FavoriteListsContext";
+import AuthContext from "../hooks/AuthContext";
 
 export function HeadingL({
   vocubulary,
@@ -15,25 +16,18 @@ export function HeadingL({
   openDrawer,
 }) {
   const { isNight } = useContext(ThemeContext);
-  const { toggleFavorites } = useContext(FavoriteContext);
+  const { toggleHeart, isFav } = useContext(FavoriteListsContext);
   const { word } = useContext(DictionaryContext);
-  const [isFav, setIsFav] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  const handleOpenDrawer = async (word) => {
+    await toggleHeart(word);
+    setOpenDrawer(!openDrawer);
+  };
+
   const heartStyle = {
     color: pink[500],
     fontSize: 30,
-  };
-
-  const handleToggleFavorites = async (word) => {
-    setIsFav((prev) => !prev);
-    try {
-      await toggleFavorites(word);
-    } catch (e) {
-      console.error(
-        "Error in toggleFavorites:",
-        e.response?.data?.error || e.message
-      );
-      setIsFav((prev) => !prev);
-    }
   };
 
   return (
@@ -46,13 +40,20 @@ export function HeadingL({
         >
           {vocubulary}
         </h1>
-        <IconButton id="margin" onClick={() => setOpenDrawer(!openDrawer)}>
-          {isFav ? (
-            <FavoriteIcon sx={heartStyle} />
-          ) : (
-            <FavoriteBorderIcon sx={heartStyle} />
-          )}
-        </IconButton>
+        {user ? (
+          <IconButton
+            id="margin"
+            onClick={() => handleOpenDrawer(word.vocubulary)}
+          >
+            {isFav ? (
+              <FavoriteIcon sx={heartStyle} />
+            ) : (
+              <FavoriteBorderIcon sx={heartStyle} />
+            )}
+          </IconButton>
+        ) : (
+          <></>
+        )}
       </div>
       <h2 className="text-[24px] font-bold text-Purple-1">{phoneticText}</h2>
     </div>

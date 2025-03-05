@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { User } from "./src/models/UserSchema.js";
 import { router as UserRoutes } from "./src/routes/UserRoutes.js";
-import {router as FavRoutes} from "./src/routes/FavRoutes.js";
+import { router as FavRoutes } from "./src/routes/FavRoutes.js";
 import passport from "passport";
 import express from "express";
 import LocalStrategy from "passport-local";
@@ -31,10 +31,11 @@ const sessionConfig = {
   name: "session",
   secret: "thisismysecert",
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false, // 這樣 passport 只會在登入後儲存 session
+  unset: "destroy",
   cookie: {
     httpOnly: true,
-    // secure: true,
+    secure: false,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
@@ -45,7 +46,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session(sessionConfig)); //開啟session儲存登入狀態
 
-app.use(passport.initialize());//啟動passport功能
+app.use(passport.initialize()); //啟動passport功能
+app.use(passport.session());
 
 passport.use(new LocalStrategy(User.authenticate()));
 

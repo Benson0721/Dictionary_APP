@@ -6,10 +6,14 @@ async function login(url, userData) {
   try {
     console.log(userData);
     const { username, password } = userData;
-    const response = await axios.post(`${url}/auth/login`, {
-      username,
-      password,
-    });
+    const response = await axios.post(
+      `${url}/api/login`,
+      {
+        username,
+        password,
+      },
+      { withCredentials: true }
+    );
     return { id: response.data._id, username: response.data.username };
   } catch (e) {
     console.error("Error in login:", e.response?.data?.error || e.message);
@@ -22,7 +26,7 @@ export const loginAction = async ({ request }) => {
     const formData = await request.formData();
     const userData = Object.fromEntries(formData);
     const response = await login(baseURL, userData);
-  
+
     if (response.error) {
       return { error: response.error };
     }

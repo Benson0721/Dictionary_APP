@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import AuthContext from "../../../hooks/AuthContext";
 import localforage from "localforage";
 import { useSubmit, useActionData } from "react-router";
-
+import FavoriteListsContext from "../../../hooks/FavoriteListsContext";
 import "./LoginPage.css";
 
 export default function LoginPage() {
@@ -15,7 +15,8 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: joiResolver(LoginRule) });
-
+  const { fetchLists, lists, toggleHeart, favoriteWords } =
+    useContext(FavoriteListsContext);
   const { setUser } = useContext(AuthContext);
   const actionData = useActionData();
   console.log(actionData);
@@ -35,6 +36,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data) => {
     submit(data, { action: "/login", method: "POST" });
+    await fetchLists();
   };
 
   return (

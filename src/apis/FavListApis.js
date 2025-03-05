@@ -1,13 +1,21 @@
-import { FavoriteLists } from "../models/FavoriteListSchema";
+import { FavoriteLists } from "../models/FavoriteListSchema.js";
+import { FavoriteWord } from "../models/FavoriteWordSchema.js";
 
 export const getFavoriteLists = async (req, res) => {
-  if (!req.isAuthenticated()) {
+  /*if (!req.isAuthenticated()) {
+    console.log(req.user);
+    console.log(req.session);
+    console.log(req.isAuthenticated());
     return res.status(401).json({ message: "Unauthorized" });
-  }
+  }*/
+
   try {
     const { userID } = req.params;
-    const favLists = await FavoriteLists.find({ userID: userID });
-    res.json(favLists);
+    const favLists = await FavoriteLists.find({ user: userID });
+    console.log(favLists);
+    const favWords = await FavoriteWord.find({ user: userID }); //抓取所有單字檢查收藏狀態
+    console.log(favWords);
+    res.json({ favLists, favWords });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -21,7 +29,14 @@ export const addFavoriteList = async (req, res) => {
   const { data } = req.body;
 
   try {
-    const newList = await FavoriteLists.create({ ...data, user: userID });
+    console.log("後端觸發");
+    console.log(userID);
+    console.log(data);
+    const newList = await FavoriteLists.create(
+      { ...data, user: userID },
+      { new: true }
+    );
+    console.log(newList);
     res.json(newList);
   } catch (error) {
     res.status(500).json({ message: error.message });

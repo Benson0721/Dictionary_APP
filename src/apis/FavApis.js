@@ -1,4 +1,4 @@
-import { FavoriteWord } from "../models/FavoriteWordSchema";
+import { FavoriteWord } from "../models/FavoriteWordSchema.js";
 
 export const getFavoriteWords = async (req, res) => {
   if (!req.isAuthenticated()) {
@@ -20,7 +20,7 @@ export const addFavoriteWord = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   try {
-    const { listID } = req.params;
+    const { userID, listID } = req.params;
     const { newWord } = req.body;
     let existWord = await FavoriteWord.findOne({ word: newWord.word });
     if (existWord) {
@@ -34,7 +34,8 @@ export const addFavoriteWord = async (req, res) => {
     } else {
       const favWord = await FavoriteWord.create({
         ...newWord,
-        FavoriteLists: [listID], //陣列處理方式
+        FavoriteLists: [listID],
+        user: userID, //陣列處理方式
       });
       res.json(favWord);
     }
@@ -67,7 +68,7 @@ export const removeFavoriteWord = async (req, res) => {
     // **再確認這個單字是否還被其他收藏夾使用**
     const updatedWord = await FavoriteWord.findById(wordID);
 
-    if (updatedWord.FavoriteLists.length === 0) {
+    if (updatedWord.favoriteLists.length === 0) {
       // 🗑 如果已經沒有收藏夾使用這個單字，就刪除整個 wordData
       await FavoriteWord.findByIdAndDelete(wordID);
     }

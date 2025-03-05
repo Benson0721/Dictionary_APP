@@ -1,5 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import localforage from "localforage";
+import axios from "axios";
+const baseURL = window.location.origin;
 
 const AuthContext = createContext({
   isLoggedIn: false,
@@ -30,6 +32,10 @@ export const AuthProvider = ({ children }) => {
     await localforage.removeItem("user", () => {
       console.log("user removed");
     });
+    const res = await axios.get(`${baseURL}/api/logout`, {
+      withCredentials: true,
+    });
+    console.log(res);
     setUser(null);
     setIsLoggedIn(false);
   };

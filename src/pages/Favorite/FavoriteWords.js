@@ -1,18 +1,18 @@
 import axios from "axios";
 const baseURL = window.location.origin;
-export const getFavorite = async (userID, listID) => {
+export const getFavoriteWords = async (userID, listID) => {
   try {
-    const res = await axios.get(`${baseURL}/${userID}/lists/${listID}`);
+    const res = await axios.get(`${baseURL}/api/${userID}/lists/${listID}`);
     return res.data;
   } catch (e) {
     return { error: "Get Favorite words Fail!" };
   }
 };
 
-export const addFavorite = async (userID, listID, newWord) => {
+export const addFavoriteWord = async (userID, listID, newWord) => {
   try {
     const res = await axios.post(
-      `${baseURL}/${userID}/lists/${listID}/favorite`,
+      `${baseURL}/api/${userID}/lists/${listID}/favorite`,
       {
         newWord: newWord,
       }
@@ -23,10 +23,10 @@ export const addFavorite = async (userID, listID, newWord) => {
   }
 };
 
-export const removeFavorite = async (userID, listID, wordID) => {
+export const removeFavoriteWord = async (userID, listID, wordID) => {
   try {
     const res = await axios.delete(
-      `${baseURL}/${userID}/lists/${listID}/favorite/${wordID}`
+      `${baseURL}/api/${userID}/lists/${listID}/favorite/${wordID}`
     );
     return { success: "Delete Favorite Success!" };
   } catch (e) {

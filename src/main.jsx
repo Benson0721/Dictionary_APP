@@ -4,7 +4,8 @@ import "./assets/css/index.css";
 import { DictionaryContentProvider } from "./hooks/DictionaryContext.jsx";
 import { ThemeContentProvider } from "./hooks/ThemeContext.jsx";
 import { AuthProvider } from "./hooks/AuthContext.jsx";
-import { FavoriteContentProvider } from "./hooks/FavoriteContext.jsx";
+import { FavoriteListsContentProvider } from "./hooks/FavoriteListsContext.jsx";
+import { FavoriteWordsContentProvider } from "./hooks/FavoriteWordsContext.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Index from "./pages/Index/Index.jsx";
 import Dictionary from "./pages/Dictionary/Dictionary.jsx";
@@ -54,11 +55,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ThemeContentProvider>
-        <FavoriteContentProvider>
-          <DictionaryContentProvider>
-            <RouterProvider router={router} />
-          </DictionaryContentProvider>
-        </FavoriteContentProvider>
+        <FavoriteListsContentProvider>
+          <FavoriteWordsContentProvider>
+            <DictionaryContentProvider>
+              <RouterProvider router={router} />
+            </DictionaryContentProvider>
+          </FavoriteWordsContentProvider>
+        </FavoriteListsContentProvider>
       </ThemeContentProvider>
     </AuthProvider>
   </StrictMode>

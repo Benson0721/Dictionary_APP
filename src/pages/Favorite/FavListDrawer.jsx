@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import * as Icons from "@mui/icons-material";
 import {
   Box,
@@ -21,30 +21,26 @@ import CloseIcon from "@mui/icons-material/Close";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects"; // 預設 icon
 import MenuIcon from "@mui/icons-material/Menu"; // 選擇 icon 的按鈕
 import IconsDialog from "./IconsDialog";
+import FavoriteListsContext from "../../hooks/FavoriteListsContext";
 export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
-  const [lists, setLists] = useState([
-    { id: 1, text: "Inbox", icon: "Abc" },
-    { id: 2, text: "Starred", icon: "Abc" },
-    { id: 3, text: "Send email", icon: "Abc" },
-    { id: 4, text: "Drafts", icon: "Abc" },
-  ]);
   const [newList, setNewList] = useState(""); // 輸入框的值
   const [mode, setMode] = useState(null);
-  const [editing, setEditing] = useState(false); // 是否正在編輯
-  const [adding, setAdding] = useState(false); // 是否正在編輯
   const [selectedIcon, setSelectedIcon] = useState(null); // 選擇的 icon
   const [openDialog, setOpenDialog] = useState(false);
-
+  const { lists, addLists, updateLists, deleteLists } =
+    useContext(FavoriteListsContext);
   const theme = useTheme(); // 取得 MUI 主題
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // 判斷是否為手機
   const Icon = Icons[selectedIcon];
-  const handleSave = () => {
-    if (newList.trim()) {
-      setLists([...lists, { text: newList, icon: selectedIcon }]);
-    }
+  const handleCreate = async (name, icon) => {
+    await addLists({ name, icon });
     setMode(null);
     setSelectedIcon(null);
-    setOpenDialog(false);
+  };
+  const handleEdit = async (listID, updatedList) => {
+    await updateLists(listID, updatedList);
+    setMode(null);
+    setSelectedIcon(null);
   };
 
   // 取消新增
@@ -54,10 +50,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
     setSelectedIcon(null);
   };
   const handleDelete = (id) => {
-    setLists((prev) => {
-      const newLists = prev.filter((item) => item.id != id);
-      return newLists;
-    });
+    deleteLists(id);
     setNewList("");
     setSelectedIcon(null);
   };
@@ -73,8 +66,8 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
       role="presentation"
     >
       <List>
-        {lists.map((item, index) => {
-          const Icon = Icons[item.icon];
+        {lists?.map((list, index) => {
+          const Icon = Icons[list?.icon];
           return mode === "edit" ? (
             <ListItem disablePadding>
               <ListItemButton>
@@ -86,14 +79,23 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
                 <TextField
                   fullWidth
                   variant="outlined"
-                  value={item.text}
+                  value={list.name}
                   onChange={(e) => setNewList(e.target.value)}
                   placeholder="Enter new list name"
                 />
-                <IconButton color="success" onClick={handleSave}>
+                <IconButton
+                  color="success"
+                  onClick={handleEdit(list._id, {
+                    name: newList,
+                    icon: selectedIcon,
+                  })}
+                >
                   <CheckIcon />
                 </IconButton>
-                <IconButton color="error" onClick={() => handleDelete(item.id)}>
+                <IconButton
+                  color="error"
+                  onClick={() => handleDelete(list._id)}
+                >
                   <CloseIcon />
                 </IconButton>
               </ListItemButton>
@@ -104,7 +106,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
                 <ListItemIcon>
                   <Icon />
                 </ListItemIcon>
-                <ListItemText primary={item.text} />
+                <ListItemText primary={list.name} />
               </ListItemButton>
             </ListItem>
           );
@@ -125,7 +127,10 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
                 onChange={(e) => setNewList(e.target.value)}
                 placeholder="Enter new list name"
               />
-              <IconButton color="success" onClick={handleSave}>
+              <IconButton
+                color="success"
+                onClick={() => handleCreate(newList, selectedIcon)}
+              >
                 <CheckIcon />
               </IconButton>
               <IconButton color="error" onClick={handleCancel}>
@@ -162,7 +167,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
               variant="contained"
               sx={{ flexGrow: 1 }}
               onClick={() => setMode("create")}
-              disabled={adding} // 防止重複點擊
+              disabled={mode == "create"} // 防止重複點擊
             >
               Create
             </Button>
@@ -170,7 +175,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
               variant="contained"
               sx={{ flexGrow: 1 }}
               onClick={() => setMode("edit")}
-              disabled={editing}
+              disabled={mode == "edit"}
               color="success"
             >
               Edit
@@ -188,7 +193,6 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
         setOpenDialog={setOpenDialog}
         setSelectedIcon={setSelectedIcon}
         selectedIcon={selectedIcon}
-        handleSave={handleSave}
       />
       <Drawer
         anchor={isMobile ? "bottom" : "right"}

@@ -16,7 +16,7 @@ const FavoriteListSchema = new Schema({
       ref: "Favorite",
     },
   ],
-  userID: {
+  user: {
     type: mongoose.Types.ObjectId,
     ref: "User",
   },
