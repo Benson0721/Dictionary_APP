@@ -3,42 +3,64 @@ import {
   addFavoriteWord,
   getFavoriteWords,
   removeFavoriteWord,
+  getAllFavoriteWords,
 } from "../pages/Favorite/FavoriteWords";
 import localforage from "localforage";
 import AuthContext from "./AuthContext";
 import FavoriteListsContext from "./FavoriteListsContext";
+import DictionaryContext from "./DictionaryContext";
 export const FavoriteWordsContext = createContext({
-  currentWords: [],
-  fetchCurrentWords: () => {},
+  isFav: false,
+  setIsFav: () => {},
+  currentFavWords: [],
+  allFavoriteWords: [],
+  setCurrentFavWords: () => {},
+  fetchCurrentFavWords: () => {},
   addFavWord: () => {},
   removeFavWord: () => {},
 });
 
 export const FavoriteWordsContentProvider = (props) => {
-  const [currentWords, setCurrentWords] = useState([]);
+  const [currentFavWords, setCurrentFavWords] = useState([]);
+  const [allFavoriteWords, setAllFavoriteWords] = useState([]);
+  const [isFav, setIsFav] = useState(false);
   const { user } = useContext(AuthContext);
   const { currentList } = useContext(FavoriteListsContext);
-
-  const fetchCurrentWords = async () => {
+  const { word } = useContext(DictionaryContext);
+  const fetchCurrentFavWords = async () => {
     const user = await localforage.getItem("user");
     if (user) {
       try {
         const words = await getFavoriteWords(user.id, currentList);
-        setCurrentWords(words);
+        setCurrentFavWords(words);
       } catch (e) {
         console.error(e.message);
       }
     }
   };
-  const addFavWord = async (newWord) => {
+  const fetchAllFavWords = async () => {
     const user = await localforage.getItem("user");
     if (user) {
       try {
-        await addFavoriteWord(user.id, currentList, newWord);
-        await fetchCurrentWords();
+        const words = await getAllFavoriteWords(user.id);
+        console.log(words);
+        setAllFavoriteWords(words);
       } catch (e) {
         console.error(e.message);
-        await fetchCurrentWords();
+      }
+    }
+  };
+  const addFavWord = async (listID, newWord) => {
+    const user = await localforage.getItem("user");
+
+    if (user) {
+      try {
+        console.log("前端收到:", listID, newWord);
+        await addFavoriteWord(user.id, listID, newWord);
+        await fetchAllFavWords();
+      } catch (e) {
+        console.error(e.message);
+        await fetchAllFavWords();
       }
     }
   };
@@ -48,17 +70,17 @@ export const FavoriteWordsContentProvider = (props) => {
     if (user) {
       try {
         await removeFavoriteWord(user.id, listID, wordID);
-        await fetchCurrentWords();
+        await fetchCurrentFavWords();
       } catch (e) {
         console.error(e.message);
-        await fetchCurrentWords();
+        await fetchCurrentFavWords();
       }
     }
   };
 
   useEffect(() => {
     const handlefetchWords = async () => {
-      await fetchCurrentWords();
+      await fetchCurrentFavWords();
     };
 
     if (currentList && user) {
@@ -66,14 +88,28 @@ export const FavoriteWordsContentProvider = (props) => {
     }
   }, [currentList, user]);
 
+  useEffect(() => {
+    const handleAllWords = async () => {
+      await fetchAllFavWords();
+    };
+
+    if (user) {
+      handleAllWords();
+    }
+  }, [user]);
+
   const contextValue = useMemo(
     () => ({
-      currentWords,
-      fetchCurrentWords,
+      isFav,
+      setIsFav,
+      currentFavWords,
+      allFavoriteWords,
+      setCurrentFavWords,
+      fetchCurrentFavWords,
       addFavWord,
       removeFavWord,
     }),
-    [currentWords, fetchCurrentWords]
+    [currentFavWords, fetchCurrentFavWords]
   );
 
   return (

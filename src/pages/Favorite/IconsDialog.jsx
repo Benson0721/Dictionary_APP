@@ -31,6 +31,8 @@ export default function IconsDialog({
   setOpenDialog,
   setSelectedIcon,
   selectedIcon,
+  setLists,
+  selectedListID,
 }) {
   const [searchIcon, setSearchIcon] = useState("");
   const [filteredIcons, setFilteredIcons] = useState([]);
@@ -102,10 +104,10 @@ export default function IconsDialog({
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            {filteredIcons.map(([name, Icon]) => (
+            {filteredIcons.map(([iconName, Icon]) => (
               <Grid
                 size={1}
-                key={name}
+                key={iconName}
                 sx={{
                   display: "inline-flex",
                   flexDirection: "row",
@@ -116,9 +118,18 @@ export default function IconsDialog({
                 }}
               >
                 <ToggleButton
-                  value={name}
-                  onClick={() => setSelectedIcon(name)}
-                  selected={name === selectedIcon}
+                  value={iconName}
+                  onClick={() => {
+                    setSelectedIcon(iconName);
+                    setLists((prevLists) =>
+                      prevLists.map((item) =>
+                        item._id === selectedListID
+                          ? { ...item, icon: iconName }
+                          : item
+                      )
+                    );
+                  }}
+                  selected={iconName === selectedIcon}
                 >
                   <Icon />
                 </ToggleButton>

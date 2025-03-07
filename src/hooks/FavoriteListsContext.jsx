@@ -3,7 +3,7 @@ import { createContext, useEffect, useState, useContext, useMemo } from "react";
 import {
   getFavoriteLists,
   addFavoriteList,
-  updateFavoriteList,
+  updateFavoriteLists,
   deleteFavoriteList,
 } from "../pages/Favorite/FavoriteList";
 
@@ -15,6 +15,7 @@ export const FavoriteListsContext = createContext({
   favoriteWords: [],
   currentList: null,
   isFav: false,
+  setLists: () => {},
   setCurrentList: () => {},
   toggleHeart: async () => {},
   fetchLists: async () => {},
@@ -25,21 +26,24 @@ export const FavoriteListsContext = createContext({
 
 export const FavoriteListsContentProvider = (props) => {
   const [lists, setLists] = useState([]);
-  const [favoriteWords, setFavoriteWords] = useState([]);
-  const [isFav, setIsFav] = useState(false);
+
   const [currentList, setCurrentList] = useState(null);
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user?.id && user?.username) {
+      console.log("start fetch lists");
+      fetchLists(user.id);
+    }
+  }, [user, setUser]);
 
   const fetchLists = async () => {
-    const user = await localforage.getItem("user");
-    if (user) {
-      try {
-        const { favlists, favWords } = await getFavoriteLists(user.id);
-        setLists(favlists);
-        setFavoriteWords(favWords);
-      } catch (e) {
-        console.error(e.message);
-      }
+    try {
+      const data = await getFavoriteLists(user.id);
+      const { favLists } = data;
+      setLists(favLists);
+    } catch (e) {
+      console.error(e.message);
     }
   };
   const addLists = async (newList) => {
@@ -63,17 +67,12 @@ export const FavoriteListsContentProvider = (props) => {
       }
     }
   };
-  const updateLists = async (listID, updatedList) => {
+  const updateLists = async (updatedLists) => {
     const user = await localforage.getItem("user");
+    console.log("有收到user嗎:", user);
     if (user) {
-      setLists((prevLists) =>
-        prevLists.map((list) =>
-          list.id === listID ? { ...list, ...updatedList } : list
-        )
-      );
-
       try {
-        await updateFavoriteList(user.id, listID, updatedList);
+        await updateFavoriteLists(user.id, updatedLists);
         await fetchLists();
       } catch (e) {
         console.error(e.message);
@@ -96,20 +95,11 @@ export const FavoriteListsContentProvider = (props) => {
     }
   };
 
-  const toggleHeart = async (word) => {
-    const user = await localforage.getItem("user");
-    if (user) {
-      favoriteWords?.includes(word) ? setIsFav(true) : setIsFav(false);
-    }
-  };
-
   const contextValue = useMemo(
     () => ({
       lists,
-      favoriteWords,
       currentList,
-      isFav,
-      toggleHeart,
+      setLists,
       setCurrentList,
       fetchLists,
       addLists,

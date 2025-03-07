@@ -2,20 +2,15 @@ import { FavoriteLists } from "../models/FavoriteListSchema.js";
 import { FavoriteWord } from "../models/FavoriteWordSchema.js";
 
 export const getFavoriteLists = async (req, res) => {
-  /*if (!req.isAuthenticated()) {
-    console.log(req.user);
-    console.log(req.session);
-    console.log(req.isAuthenticated());
+  if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
-  }*/
+  }
 
   try {
     const { userID } = req.params;
     const favLists = await FavoriteLists.find({ user: userID });
-    console.log(favLists);
-    const favWords = await FavoriteWord.find({ user: userID }); //抓取所有單字檢查收藏狀態
-    console.log(favWords);
-    res.json({ favLists, favWords });
+
+    res.json({ favLists });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -32,27 +27,38 @@ export const addFavoriteList = async (req, res) => {
     console.log("後端觸發");
     console.log(userID);
     console.log(data);
-    const newList = await FavoriteLists.create(
-      { ...data, user: userID },
-      { new: true }
-    );
-    console.log(newList);
+    const newList = await FavoriteLists.create({ ...data, user: userID });
     res.json(newList);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-export const updateFavoriteList = async (req, res) => {
+export const updateFavoriteLists = async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const { listID } = req.params;
-  const { updatedList } = req.body;
+
+  const { listUpdates } = req.body;
+
+  console.log("後端更新收到:", listUpdates);
+  if (!Array.isArray(listUpdates) || listUpdates.length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, error: "Invalid data format" });
+  }
+
+  const bulkOps = listUpdates.map((update) => ({
+    updateOne: {
+      filter: { _id: update.listId },
+      update: { $set: { icon: update.icon, name: update.name } }, // 直接回傳lists處理單筆或多筆更新
+    },
+  }));
   try {
-    const List = await FavoriteLists.findByIdAndUpdate(listID, updatedList, {
-      new: true, //回傳更新過的資料
-    });
-    res.json(List);
+    await FavoriteLists.bulkWrite(bulkOps);
+
+    // ✅ 批次更新後，直接回傳最新的 lists
+    const updatedLists = await FavoriteLists.find({});
+    return res.json({ success: true, lists: updatedLists });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -5,7 +5,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { pink } from "@mui/material/colors";
 import { IconButton } from "@mui/material";
-import FavoriteListsContext from "../hooks/FavoriteListsContext";
+import FavoriteWordsContext from "../hooks/FavoriteWordsContext";
 import AuthContext from "../hooks/AuthContext";
 
 export function HeadingL({
@@ -16,14 +16,8 @@ export function HeadingL({
   openDrawer,
 }) {
   const { isNight } = useContext(ThemeContext);
-  const { toggleHeart, isFav } = useContext(FavoriteListsContext);
-  const { word } = useContext(DictionaryContext);
+  const { isFav } = useContext(FavoriteWordsContext);
   const { user } = useContext(AuthContext);
-
-  const handleOpenDrawer = async (word) => {
-    await toggleHeart(word);
-    setOpenDrawer(!openDrawer);
-  };
 
   const heartStyle = {
     color: pink[500],
@@ -41,10 +35,7 @@ export function HeadingL({
           {vocubulary}
         </h1>
         {user ? (
-          <IconButton
-            id="margin"
-            onClick={() => handleOpenDrawer(word.vocubulary)}
-          >
+          <IconButton id="margin" onClick={() => setOpenDrawer(!openDrawer)}>
             {isFav ? (
               <FavoriteIcon sx={heartStyle} />
             ) : (

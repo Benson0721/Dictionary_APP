@@ -31,6 +31,7 @@ export const loginAction = async ({ request }) => {
       return { error: response.error };
     }
     await localforage.setItem("user", response);
+    console.log("login action");
     return { id: response.id, username: response.username };
   } catch (e) {
     console.error("Error in login:", e.response?.data?.error || e.message);

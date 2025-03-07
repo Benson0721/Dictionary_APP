@@ -29,13 +29,28 @@ export const deleteFavoriteList = async (userID, listID) => {
   }
 };
 
-export const updateFavoriteList = async (userID, listID, updatedList) => {
+export const updateFavoriteLists = async (userID, updatedLists) => {
+  //可是用於一筆或大量更新
+  console.log("前端api start update:", updatedLists);
   try {
-    const res = await axios.patch(`${baseURL}/api/${userID}/lists/${listID}`, {
-      updateList: updatedList,
-    });
-    return res.data;
+    const res = await axios.patch(
+      `${baseURL}/api/${userID}/lists`,
+      {
+        listUpdates: updatedLists.map((list) => ({
+          listId: list._id,
+          icon: list.icon, // 你要更新的字段
+          name: list.name,
+        })),
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("前端回收:", res.data.lists);
+    return res.data.lists;
   } catch (e) {
-    return { error: "Update Favorite Fail!" };
+    return { error: "Update Lists Fail!" };
   }
 };

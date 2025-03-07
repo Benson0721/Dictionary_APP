@@ -2,26 +2,29 @@ import express from "express";
 import {
   getFavoriteLists,
   addFavoriteList,
-  updateFavoriteList,
+  updateFavoriteLists,
   deleteFavoriteList,
 } from "../apis/FavListApis.js";
 import {
   getFavoriteWords,
   removeFavoriteWord,
   addFavoriteWord,
+  getAllFavoriteWords,
 } from "../apis/FavApis.js";
 
 const router = express.Router();
 
+router.route("/:userID").get(getAllFavoriteWords); // 取得該清單內的所有單字
+
 router
   .route("/:userID/lists")
   .get(getFavoriteLists) // 取得使用者的所有清單
-  .post(addFavoriteList); // 新增一個清單
+  .post(addFavoriteList) // 新增一個清單
+  .patch(updateFavoriteLists); // 更新該清單
 
 router
   .route("/:userID/lists/:listID")
   .get(getFavoriteWords) // 取得該清單內的所有單字
-  .patch(updateFavoriteList) // 更新該清單
   .delete(deleteFavoriteList); // 刪除該清單
 
 router.route("/:userID/lists/:listID/favorites").post(addFavoriteWord); // 在清單內新增單字

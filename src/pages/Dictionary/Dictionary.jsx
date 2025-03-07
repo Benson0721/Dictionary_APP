@@ -51,25 +51,6 @@ export default function Dictionary() {
   }, []);
 
   useEffect(() => {
-    const handleFetchLists = async () => {
-      console.log("fetch");
-      await fetchLists();
-    };
-
-    if (user && user.length > 0) {
-      handleFetchLists();
-    }
-  }, [user, lists, word]);
-
-  useEffect(() => {
-    const handleHeart = async () => {
-      await toggleHeart();
-    };
-
-    handleHeart();
-  }, [favoriteWords]);
-
-  useEffect(() => {
     //processing word data
     if (Object.keys(word).length > 0) {
       setPhoneticData(phonetics);

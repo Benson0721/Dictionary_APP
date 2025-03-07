@@ -6,7 +6,7 @@ import ThemeContext from "../../hooks/ThemeContext";
 import selectToggle from "../../assets/images/selector.svg";
 import AuthContext from "../../hooks/AuthContext";
 import avatar from "../../assets/images/emojinoko.jpg";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useActionData } from "react-router";
 
 function DayNightToggle() {
   const { isNight, setIsNight } = useContext(ThemeContext);
@@ -101,10 +101,18 @@ function FontSelector({ font, setFont }) {
   );
 }
 
-function UserInterface({ isLoggedIn, user, isNight, logout }) {
+function UserInterface({
+  isLoggedIn,
+  user,
+  setUser,
+  isNight,
+  logout,
+  setIsLoggedIn,
+}) {
   const navigate = useNavigate();
   //const [isLoading, setIsLoading] = useState(true);
   const [userToggle, setUserToggle] = useState(false);
+
   const handleLogout = async () => {
     await logout();
     navigate("/dictionary");
@@ -128,12 +136,7 @@ function UserInterface({ isLoggedIn, user, isNight, logout }) {
   }, [userToggle]);
 
   return (
-    <div
-      className={`Dictionary__navbar-user m-4 ${
-        isNight ? "text-white" : "text-Black-3"
-      }font-bold `}
-      ref={menuRef}
-    >
+    <div className={`Dictionary__navbar-user m-4 font-bold `} ref={menuRef}>
       {isLoggedIn ? (
         <>
           <img
@@ -141,7 +144,13 @@ function UserInterface({ isLoggedIn, user, isNight, logout }) {
             src={avatar}
             alt="avatar"
           />
-          <p className="Dictionary__navbar-user__name mt-1">{user.username}</p>
+          <p
+            className={`Dictionary__navbar-user__name mt-1 ${
+              isNight ? "text-white" : "text-Black-3"
+            }`}
+          >
+            {user.username}
+          </p>
           <img
             src={selectToggle}
             alt="toggler"
@@ -185,7 +194,13 @@ function UserInterface({ isLoggedIn, user, isNight, logout }) {
             src={avatar}
             alt="avatar"
           />
-          <p className="Dictionary__navbar-user__name mt-1">Anonymous</p>
+          <p
+            className={`Dictionary__navbar-user__name mt-1 ${
+              isNight ? "text-white" : "text-Black-3"
+            }`}
+          >
+            Anonymous
+          </p>
           <img
             src={selectToggle}
             alt="toggler"
@@ -214,7 +229,8 @@ function UserInterface({ isLoggedIn, user, isNight, logout }) {
   );
 }
 export default function Navbar({ setFont, font }) {
-  const { isLoggedIn, user, setUser, logout } = useContext(AuthContext);
+  const { isLoggedIn, user, setUser, logout, setIsLoggedIn } =
+    useContext(AuthContext);
   const { isNight } = useContext(ThemeContext);
   return (
     <nav className="Dictionary__navbar my-6 md:my-12">
@@ -230,6 +246,7 @@ export default function Navbar({ setFont, font }) {
         <DayNightToggle />
         <UserInterface
           isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
           user={user}
           setUser={setUser}
           isNight={isNight}

@@ -18,27 +18,84 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects"; // 預設 icon
-import MenuIcon from "@mui/icons-material/Menu"; // 選擇 icon 的按鈕
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconsDialog from "./IconsDialog";
 import FavoriteListsContext from "../../hooks/FavoriteListsContext";
+import FavoriteWordsContext from "../../hooks/FavoriteWordsContext";
+import DictionaryContext from "../../hooks/DictionaryContext";
+import AuthContext from "../../hooks/AuthContext";
+import { pink } from "@mui/material/colors";
+import { set } from "mongoose";
 export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
-  const [newList, setNewList] = useState(""); // 輸入框的值
+  const [inputList, setInputList] = useState(""); // 輸入框的值
   const [mode, setMode] = useState(null);
   const [selectedIcon, setSelectedIcon] = useState(null); // 選擇的 icon
   const [openDialog, setOpenDialog] = useState(false);
-  const { lists, addLists, updateLists, deleteLists } =
+  const { lists, setLists, addLists, updateLists, deleteLists } =
     useContext(FavoriteListsContext);
+  const { user, setUser } = useContext(AuthContext);
   const theme = useTheme(); // 取得 MUI 主題
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // 判斷是否為手機
   const Icon = Icons[selectedIcon];
+  const [selectedListID, setSelectedListID] = useState(null);
+  const [curWord, setCurWord] = useState(null);
+  const [curWordList, setCurWordList] = useState([]);
+  const { addFavWord, allFavoriteWords, setIsFav, isFav } =
+    useContext(FavoriteWordsContext);
+  const { word } = useContext(DictionaryContext);
+  const { vocabulary, phonetics, meanings } = word;
+  console.log(word);
+  console.log(isFav);
+  useEffect(() => {
+    if (word.vocabulary && word.meanings) {
+      const curWordData = {
+        word: vocabulary,
+        audio: phonetics?.audio,
+        meaning: meanings[0]?.definitions[0]?.definition,
+      };
+      console.log(curWordData);
+      console.log(allFavoriteWords);
+      setCurWord(curWordData);
+
+      setIsFav(() =>
+        allFavoriteWords?.some((fav) => fav.word === word.vocabulary)
+          ? true
+          : false
+      );
+      /*allFavoriteWords.map((fav) => {//map會遍歷所有單字，造成setcurwordlist重複調用失去值
+        if (fav.word === word.vocabulary) {
+          console.log("已是收藏單字");
+          console.log(fav.favoriteLists);
+          setCurWordList(fav.favoriteLists);
+          console.log(curWordList);
+        } else {
+          setCurWordList([]);
+        }
+       
+      });*/
+      const foundFav = allFavoriteWords?.find(
+        (fav) => fav.word === word.vocabulary
+      );
+      if (foundFav) {
+        console.log("已是收藏單字");
+        console.log(foundFav.favoriteLists);
+        setCurWordList(foundFav.favoriteLists);
+      } else {
+        setCurWordList([]); // 若未找到，清空 curWordList
+      }
+    }
+  }, [word, allFavoriteWords]);
+
   const handleCreate = async (name, icon) => {
     await addLists({ name, icon });
+    setInputList("");
     setMode(null);
     setSelectedIcon(null);
   };
-  const handleEdit = async (listID, updatedList) => {
-    await updateLists(listID, updatedList);
+  const handleEdit = async (updatedLists) => {
+    console.log("ui收到", updatedLists);
+    await updateLists(updatedLists);
+    setInputList("");
     setMode(null);
     setSelectedIcon(null);
   };
@@ -46,15 +103,22 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
   // 取消新增
   const handleCancel = () => {
     setMode(null);
-    setNewList("");
+    setInputList("");
     setSelectedIcon(null);
   };
   const handleDelete = (id) => {
     deleteLists(id);
-    setNewList("");
+    setInputList("");
     setSelectedIcon(null);
   };
 
+  const heartStyle = {
+    color: pink[500],
+    fontSize: 20,
+  };
+
+  console.log("lists:", lists);
+  console.log("mode:", mode);
   const DrawerList = (
     <Box
       sx={{
@@ -69,10 +133,15 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
         {lists?.map((list, index) => {
           const Icon = Icons[list?.icon];
           return mode === "edit" ? (
-            <ListItem disablePadding>
+            <ListItem disablePadding key={index}>
               <ListItemButton>
                 <ListItemIcon>
-                  <IconButton onClick={() => setOpenDialog(true)}>
+                  <IconButton
+                    onClick={() => {
+                      setOpenDialog(true);
+                      setSelectedListID(list._id);
+                    }}
+                  >
                     <Icon />
                   </IconButton>
                 </ListItemIcon>
@@ -80,18 +149,18 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
                   fullWidth
                   variant="outlined"
                   value={list.name}
-                  onChange={(e) => setNewList(e.target.value)}
+                  onChange={(e) =>
+                    setLists((prevLists) =>
+                      prevLists.map((item) =>
+                        item._id === list._id
+                          ? { ...item, name: e.target.value }
+                          : item
+                      )
+                    )
+                  }
                   placeholder="Enter new list name"
                 />
-                <IconButton
-                  color="success"
-                  onClick={handleEdit(list._id, {
-                    name: newList,
-                    icon: selectedIcon,
-                  })}
-                >
-                  <CheckIcon />
-                </IconButton>
+
                 <IconButton
                   color="error"
                   onClick={() => handleDelete(list._id)}
@@ -102,11 +171,16 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
             </ListItem>
           ) : (
             <ListItem key={index} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => addFavWord(list._id, curWord)}>
                 <ListItemIcon>
                   <Icon />
                 </ListItemIcon>
                 <ListItemText primary={list.name} />
+                {curWordList.map((id) => {
+                  if (id === list._id) {
+                    return <FavoriteIcon sx={heartStyle} />;
+                  }
+                })}
               </ListItemButton>
             </ListItem>
           );
@@ -123,13 +197,14 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
               <TextField
                 fullWidth
                 variant="outlined"
-                value={newList}
-                onChange={(e) => setNewList(e.target.value)}
+                value={inputList}
+                onChange={(e) => setInputList(e.target.value)}
                 placeholder="Enter new list name"
               />
               <IconButton
                 color="success"
-                onClick={() => handleCreate(newList, selectedIcon)}
+                disabled={!inputList || !selectedIcon}
+                onClick={() => handleCreate(inputList, selectedIcon)}
               >
                 <CheckIcon />
               </IconButton>
@@ -156,9 +231,10 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
           <Button
             variant="contained"
             sx={{ flexGrow: 1 }}
-            onClick={() => setMode(null)}
-            color="error"
+            onClick={() => handleEdit(lists)}
+            color="success"
           >
+            <CheckIcon />
             End edit
           </Button>
         ) : (
@@ -174,7 +250,9 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
             <Button
               variant="contained"
               sx={{ flexGrow: 1 }}
-              onClick={() => setMode("edit")}
+              onClick={() => {
+                setMode("edit");
+              }}
               disabled={mode == "edit"}
               color="success"
             >
@@ -193,6 +271,8 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
         setOpenDialog={setOpenDialog}
         setSelectedIcon={setSelectedIcon}
         selectedIcon={selectedIcon}
+        selectedListID={selectedListID}
+        setLists={setLists}
       />
       <Drawer
         anchor={isMobile ? "bottom" : "right"}

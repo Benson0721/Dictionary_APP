@@ -9,10 +9,19 @@ export const getFavoriteWords = async (userID, listID) => {
   }
 };
 
+export const getAllFavoriteWords = async (userID) => {
+  try {
+    const res = await axios.get(`${baseURL}/api/${userID}`);
+    return res.data;
+  } catch (e) {
+    return { error: "Get Favorite words Fail!" };
+  }
+};
+
 export const addFavoriteWord = async (userID, listID, newWord) => {
   try {
     const res = await axios.post(
-      `${baseURL}/api/${userID}/lists/${listID}/favorite`,
+      `${baseURL}/api/${userID}/lists/${listID}/favorites`,
       {
         newWord: newWord,
       }

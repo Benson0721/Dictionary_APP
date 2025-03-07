@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     element: <FavoritePage />,
     //errorElement: <AuthError />,
     //loader: contactLoader,
-    action: registerAction,
+ 
   },
 ]);
 

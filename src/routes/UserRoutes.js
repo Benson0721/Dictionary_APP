@@ -3,6 +3,15 @@ import { logout, register } from "../apis/UserAPIs.js";
 import passport from "passport";
 
 const router = express.Router();
+
+router.get("/checkAuth", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ isAuthenticated: true, user: req.user });
+  } else {
+    res.json({ isAuthenticated: false });
+  }
+});
+
 router.post("/register", (req, res) => {
   register(req, res);
   console.log("route觸發");

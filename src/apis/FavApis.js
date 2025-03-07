@@ -1,5 +1,5 @@
 import { FavoriteWord } from "../models/FavoriteWordSchema.js";
-
+import { FavoriteLists } from "../models/FavoriteListSchema.js";
 export const getFavoriteWords = async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -15,27 +15,48 @@ export const getFavoriteWords = async (req, res) => {
   }
 };
 
+export const getAllFavoriteWords = async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  try {
+    const { userID } = req.params;
+    const allFavWords = await FavoriteWord.find({ user: userID });
+    res.json(allFavWords);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const addFavoriteWord = async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   try {
     const { userID, listID } = req.params;
+    console.log(userID, listID);
     const { newWord } = req.body;
+    console.log(newWord);
     let existWord = await FavoriteWord.findOne({ word: newWord.word });
     if (existWord) {
       //防止重複創建單字，只增加listID
       const updatedWord = await FavoriteWord.findByIdAndUpdate(
         existWord._id,
-        { $addToSet: { FavoriteLists: listID } }, // 防止重複加入
+        { $addToSet: { favoriteLists: listID } }, // 防止重複加入
         { new: true }
       );
+      await FavoriteLists.findByIdAndUpdate(listID, {
+        $addToSet: { favoriteWords: updatedWord._id },
+      });
       res.json(updatedWord);
     } else {
       const favWord = await FavoriteWord.create({
         ...newWord,
-        FavoriteLists: [listID],
+        favoriteLists: [listID],
         user: userID, //陣列處理方式
+      });
+      await FavoriteLists.findByIdAndUpdate(listID, {
+        $addToSet: { favoriteWords: favWord._id },
       });
       res.json(favWord);
     }

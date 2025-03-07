@@ -10,6 +10,10 @@ const FavoriteWordSchema = new Schema({
     type: String,
     required: true,
   },
+  meaning: {
+    type: String,
+    required: true,
+  },
   favoriteLists: [
     {
       type: mongoose.Types.ObjectId,

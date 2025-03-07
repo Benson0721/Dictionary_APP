@@ -1,11 +1,16 @@
 import { createContext, useEffect, useState } from "react";
-import localforage from "localforage";
+import { useContext } from "react";
+import FavoriteListsContext from "./FavoriteListsContext";
+import localforage, { ready } from "localforage";
 import axios from "axios";
+
 const baseURL = window.location.origin;
 
 const AuthContext = createContext({
   isLoggedIn: false,
   user: null,
+  checkSession: async () => {},
+  setIsLoggedIn: () => {},
   setUser: () => {},
   logout: () => {},
 });
@@ -13,20 +18,13 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const { lists, fetchLists } = useContext(FavoriteListsContext);
+  const [isReady, setIsReady] = useState(false);
+  console.log(isLoggedIn);
 
   useEffect(() => {
-    const checkUserStatus = async () => {
-      const savedUser = await localforage.getItem("user");
-      if (savedUser) {
-        setUser(savedUser);
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    };
-
-    checkUserStatus();
-  }, [user]);
+    checkSession();
+  }, []);
 
   const logout = async () => {
     await localforage.removeItem("user", () => {
@@ -39,9 +37,39 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setIsLoggedIn(false);
   };
+  const checkSession = async () => {
+    try {
+      const res = await axios.get(`${baseURL}/api/checkAuth`, {
+        withCredentials: true, // 讓瀏覽器傳送 Cookie
+      });
+
+      if (res.data.isAuthenticated) {
+        console.log(res.data.user);
+
+        const newUser = {
+          id: res.data.user._id,
+          username: res.data.user.username,
+        };
+        await localforage.setItem("user", newUser);
+        setUser(newUser);
+        setIsLoggedIn(true);
+      } else {
+        await localforage.clear(); // Session 遺失就清空前端儲存的資料
+        setUser(null);
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.error("Session 檢查失敗:", error);
+      await localforage.clear();
+      setUser(null);
+      setIsLoggedIn(false);
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, setUser, logout }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, user, setUser, logout, setIsLoggedIn, checkSession }}
+    >
       {children}
     </AuthContext.Provider>
   );

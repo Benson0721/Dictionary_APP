@@ -6,11 +6,12 @@ import passport from "passport";
 import express from "express";
 import LocalStrategy from "passport-local";
 import session from "express-session";
-import cors from "cors";
+import MongoStore from "connect-mongo";
+const DBURL = "mongodb://127.0.0.1:27017/dictionary";
 
 const connectToDB = async () => {
   try {
-    mongoose.connect("mongodb://127.0.0.1:27017/dictionary");
+    mongoose.connect(DBURL);
     console.log("connection successful");
   } catch (err) {
     console.error(err);
@@ -25,9 +26,20 @@ db.once("open", () => {
   console.log("Database connected");
 });
 
+const store = MongoStore.create({
+  mongoUrl: DBURL,
+  collectionName: "sessions",
+  touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+  console.log("Session Store Error", e);
+}); // use for logginger)
+
 const app = express();
 const port = 5000;
 const sessionConfig = {
+  store,
   name: "session",
   secret: "thisismysecert",
   resave: false,

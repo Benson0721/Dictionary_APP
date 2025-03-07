@@ -17,26 +17,36 @@ export default function LoginPage() {
   } = useForm({ resolver: joiResolver(LoginRule) });
   const { fetchLists, lists, toggleHeart, favoriteWords } =
     useContext(FavoriteListsContext);
-  const { setUser } = useContext(AuthContext);
+  const { setUser, setIsLoggedIn, checkSession } = useContext(AuthContext);
   const actionData = useActionData();
   console.log(actionData);
   const submit = useSubmit();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (actionData?.id && actionData?.username) {
-      setUser(actionData); // 更新全域用戶資料
-      navigate("/dictionary"); // 登入成功後重導至字典頁面
-    }
+    const checkUserStatus = async () => {
+      if (actionData?.error) {
+        console.log(actionData.error); // 處理錯誤
+        setIsLoggedIn(false);
+      }
+      const newUser = { id: actionData?.id, username: actionData?.username };
 
-    if (actionData?.error) {
-      console.log(actionData.error); // 處理錯誤
-    }
-  }, [actionData, setUser, navigate]);
+      if (newUser.username != undefined && newUser.id != undefined) {
+        console.log("found");
+        await localforage.setItem("user", newUser);
+        setUser(newUser);
+        setIsLoggedIn(true);
+        navigate("/dictionary");
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkUserStatus();
+  }, [actionData]);
 
   const onSubmit = async (data) => {
     submit(data, { action: "/login", method: "POST" });
-    await fetchLists();
   };
 
   return (

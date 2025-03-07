@@ -33,20 +33,31 @@ export default function RegisterPage() {
   } = useForm({ resolver: joiResolver(RegisterRule) });
 
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { setIsLoggedIn, setUser } = useContext(AuthContext);
   const actionData = useActionData();
   const submit = useSubmit();
   console.log(actionData);
   useEffect(() => {
-    if (actionData?.id && actionData?.username) {
-      setUser(actionData);
-      navigate("/dictionary");
-    }
+    const checkUserStatus = async () => {
+      if (actionData?.error) {
+        console.log(actionData.error); // 處理錯誤
+        setIsLoggedIn(false);
+      }
+      const newUser = { id: actionData?.id, username: actionData?.username };
 
-    if (actionData?.error) {
-      console.log(actionData.error);
-    }
-  }, [actionData, setUser, navigate]);
+      if (newUser.username != undefined && newUser.id != undefined) {
+        console.log("found");
+        await localforage.setItem("user", newUser);
+        setUser(newUser);
+        setIsLoggedIn(true);
+        navigate("/dictionary");
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkUserStatus();
+  }, [actionData]);
 
   const onSubmit = async (data) => {
     submit(data, { action: "/register", method: "POST" });
