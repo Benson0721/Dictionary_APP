@@ -2,19 +2,45 @@
   display: flex;
   align-items: center;
   width: 100%;
+  height: 84px;
+  padding: 48px 56px;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 5;
   &__logo {
     margin-right: auto;
+    margin-bottom: 8px;
   }
   &__space {
+    position: absolute;
     display: flex;
-    margin-left: auto;
+    flex-direction: column;
     align-items: center;
+    padding: 0 16px 16px;
+    z-index: 1;
+    right: 0;
+    top: 40px;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    &--open {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+    &--close {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(20px);
+    }
+    &__item {
+      font-weight: bold;
+      margin: 10px 10px;
+    }
   }
   &-toggle {
     display: flex;
-    border-left: 1px solid #e9e9e9;
-    border-right: 1px solid #e9e9e9;
-    padding: 0 26px;
+
     &__moon {
       margin-left: 16px;
       width: 24px;
@@ -62,7 +88,9 @@
     appearance: none;
     background-color: transparent;
     &__box {
-      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 125px;
       height: 24px;
     }
@@ -71,10 +99,18 @@
     }
 
     &__toggler {
-      position: absolute;
-      top: 9px;
-      right: 10px;
+      width: 13px;
+      height: 9px;
+      &--prev {
+        margin-right: auto;
+        transform: rotate(90deg);
+      }
+      &--next {
+        margin-left: auto;
+        transform: rotate(270deg);
+      }
     }
+    /*
     &__selector {
       &-box {
         display: flex;
@@ -100,21 +136,25 @@
         pointer-events: none;
         transform: translateY(0px);
       }
-    }
+    }*/
   }
-  &-user {
+  &-interface {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: relative;
+    font-weight: bold;
     &__avatar {
       width: 32px;
       height: 32px;
       border-radius: 50%;
       border: 2px solid black;
+      margin-right: 16px;
     }
-    &__name {
-      padding-right: 8px;
-      margin-left: 16px;
-      margin-right: 8px;
+    &__user {
+      display: flex;
+      margin: 12px 0px 30px;
     }
     &__toggler {
       position: absolute;
@@ -122,6 +162,7 @@
       right: -10px;
     }
     &__menu {
+      display: flex;
       &-box {
         display: flex;
         border-radius: 16px;
@@ -130,12 +171,46 @@
         top: 45px;
         right: -10px;
         box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
-        background-color: white;
-        z-index: 1;
+        z-index: 17;
         transition: all 0.2s ease-in-out;
+        &__item {
+          padding: 15px 69px 15px 24px;
+        }
+      }
+      &--open {
+        opacity: 1;
+        transform: translateY(10px);
+      }
+      &--close {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(0px);
+      }
+    }
+    &__button {
+      padding: 10px 18px;
+      border-radius: 8px;
+    }
+  }
+  &-settings {
+    display: flex;
+    position: relative;
+
+    &__toggler {
+      position: absolute;
+      top: 9px;
+      right: -22px;
+    }
+    &__menu {
+      &-box {
+        display: flex;
+        border-radius: 16px;
+        flex-direction: column;
       }
       &__item {
-        padding: 15px 69px 15px 24px;
+        padding: 15px;
+        display: flex;
+        justify-content: center;
       }
       &--open {
         opacity: 1;
@@ -150,8 +225,112 @@
   }
 }
 
-@media only screen and (min-width: 1440px) {
+@media only screen and (min-width: 768px) {
   .Dictionary__navbar {
-    
+    &__space {
+      position: static;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-left: auto;
+      box-shadow: none;
+      &--open {
+        opacity: 1;
+        transform: translateX(0px);
+      }
+      &--close {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(20px);
+      }
+      &__item {
+        font-weight: bold;
+        margin: 20px;
+        &:nth-child(1) {
+          order: 1;
+        }
+        &:nth-child(2) {
+          order: 2;
+        }
+        &:nth-child(3) {
+          order: 3;
+        }
+      }
+    }
+    &-settings {
+      display: flex;
+      position: relative;
+
+      &__toggler {
+        position: absolute;
+        top: 9px;
+        right: -22px;
+      }
+      &__menu {
+        &-box {
+          display: flex;
+          border-radius: 16px;
+          flex-direction: column;
+          position: absolute;
+          top: 45px;
+          right: -10px;
+          box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+          z-index: 1;
+          transition: all 0.2s ease-in-out;
+        }
+        &__item {
+          padding: 15px;
+          display: flex;
+          justify-content: center;
+        }
+        &--open {
+          opacity: 1;
+          transform: translateY(10px);
+        }
+        &--close {
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(0px);
+        }
+      }
+    }
+    &-interface {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      &__avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid black;
+        margin-right: 12px;
+      }
+      &__user {
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 20px;
+        margin-top: 16px;
+      }
+      &__toggler {
+        position: absolute;
+        top: 29px;
+        right: -4px;
+      }
+      &__menu {
+        &-box {
+          display: flex;
+          border-radius: 16px;
+          flex-direction: column;
+          position: absolute;
+          top: 45px;
+          right: -10px;
+          box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.1);
+          z-index: 1;
+          transition: all 0.2s ease-in-out;
+        }
+      }
+    }
   }
 }

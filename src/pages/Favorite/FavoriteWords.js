@@ -35,7 +35,7 @@ export const addFavoriteWord = async (userID, listID, newWord) => {
 export const removeFavoriteWord = async (userID, listID, wordID) => {
   try {
     const res = await axios.delete(
-      `${baseURL}/api/${userID}/lists/${listID}/favorite/${wordID}`
+      `${baseURL}/api/${userID}/lists/${listID}/favorites/${wordID}`
     );
     return { success: "Delete Favorite Success!" };
   } catch (e) {

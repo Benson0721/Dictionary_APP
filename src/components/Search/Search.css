@@ -1,6 +1,7 @@
 .Dictionary__search {
   width: 100%;
   position: relative;
+  z-index: 3;
 }
 .Dictionary__search__input {
   width: 100%;

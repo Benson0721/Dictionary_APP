@@ -7,7 +7,7 @@ export const getFavoriteWords = async (req, res) => {
   try {
     const { listID } = req.params;
     const favWords = await FavoriteWord.find({
-      FavoriteLists: { $in: [listID] },
+      favoriteLists: { $in: [listID] },
     });
     res.json(favWords);
   } catch (error) {
@@ -82,9 +82,12 @@ export const removeFavoriteWord = async (req, res) => {
     // 從 FavoriteLists 陣列中刪除該 listID
     await FavoriteWord.findByIdAndUpdate(
       wordID,
-      { $pull: { FavoriteLists: listID } },
+      { $pull: { favoriteLists: listID } },
       { new: true }
     );
+    await FavoriteLists.findByIdAndUpdate(listID, {
+      $pull: { favoriteWords: favWord._id },
+    });
 
     // **再確認這個單字是否還被其他收藏夾使用**
     const updatedWord = await FavoriteWord.findById(wordID);

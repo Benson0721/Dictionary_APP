@@ -6,6 +6,10 @@ const FavoriteWordSchema = new Schema({
     type: String,
     required: true,
   },
+  phonetic: {
+    type: String,
+    required: true,
+  },
   audio: {
     type: String,
     required: true,

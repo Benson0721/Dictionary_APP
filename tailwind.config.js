@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        Inconsolata: ["Inconsolata", "sans-serif"],
+        Incons: ["Inconsolata", "sans-serif"],
         Inter: ["Inter", "sans-serif"],
         Lora: ["Lora", "sans-serif"],
       },
@@ -25,6 +25,7 @@ export default {
         "Purple-1": "#a445ed",
         "Purple-2": "#8f19e8",
         "Orange-1": "#ff5252",
+        "Brown-1": "#A1824A",
       },
       screens: {
         sm: "375px",

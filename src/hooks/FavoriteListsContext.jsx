@@ -24,7 +24,7 @@ export const FavoriteListsContext = createContext({
   deleteLists: async () => {},
 });
 
-export const FavoriteListsContentProvider = (props) => {
+export const FavoriteListsContextProvider = (props) => {
   const [lists, setLists] = useState([]);
 
   const [currentList, setCurrentList] = useState(null);

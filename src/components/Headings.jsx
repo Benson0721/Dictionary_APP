@@ -79,3 +79,28 @@ export function HeadingS_a({ data }) {
     </h3>
   );
 }
+
+export function FavWordHeading({ word, phonetic, meaning }) {
+  const { isNight } = useContext(ThemeContext);
+  const { isFav } = useContext(FavoriteWordsContext);
+  const { user } = useContext(AuthContext);
+
+  const heartStyle = {
+    color: pink[500],
+    fontSize: 30,
+  };
+
+  return (
+    <div className={`flex flex-col items-start ml-8`}>
+      <h3
+        className={`text-[32px] md:text-[36px] font-bold mr-4 ${
+          isNight ? "text-white" : "text-Black-3"
+        } transition duration-400 ease-in-out`}
+      >
+        {word}
+      </h3>
+      <p className="text-[16px] font-bold text-Purple-1">{phonetic}</p>
+      <p className="text-[12px] font-bold text-gray-400">-{meaning}</p>
+    </div>
+  );
+}

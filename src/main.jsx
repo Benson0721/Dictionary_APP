@@ -1,24 +1,26 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "./assets/css/index.css";
+import "./assets/css/generated-tailwind.css";
 import { DictionaryContentProvider } from "./hooks/DictionaryContext.jsx";
 import { ThemeContentProvider } from "./hooks/ThemeContext.jsx";
 import { AuthProvider } from "./hooks/AuthContext.jsx";
-import { FavoriteListsContentProvider } from "./hooks/FavoriteListsContext.jsx";
-import { FavoriteWordsContentProvider } from "./hooks/FavoriteWordsContext.jsx";
+import { FavoriteListsContextProvider } from "./hooks/FavoriteListsContext.jsx";
+import { FavoriteWordsContextProvider } from "./hooks/FavoriteWordsContext.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Index from "./pages/Index/Index.jsx";
+import FrontPage from "./pages/FrontPage/FrontPage.jsx";
 import Dictionary from "./pages/Dictionary/Dictionary.jsx";
 import LoginPage from "./pages/Auth/LoginPage/LoginPage.jsx";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage.jsx";
 import FavoritePage from "./pages/Favorite/FavoritePage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { loginAction } from "./pages/Auth/LoginPage/LoginAction.js";
 import { registerAction } from "./pages/Auth/RegisterPage/RegisterAction.js";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Index />,
+    element: <FrontPage />,
     /*errorElement: <ErrorPage />,
     loader: rootLoader,
     action: rootAction,*/
@@ -43,11 +45,14 @@ const router = createBrowserRouter([
     action: registerAction,
   },
   {
-    path: ":id/favorite",
-    element: <FavoritePage />,
+    path: ":id/favorites",
+    element: (
+      <ProtectedRoute>
+        <FavoritePage />
+      </ProtectedRoute>
+    ),
     //errorElement: <AuthError />,
     //loader: contactLoader,
- 
   },
 ]);
 
@@ -55,13 +60,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ThemeContentProvider>
-        <FavoriteListsContentProvider>
-          <FavoriteWordsContentProvider>
+        <FavoriteListsContextProvider>
+          <FavoriteWordsContextProvider>
             <DictionaryContentProvider>
               <RouterProvider router={router} />
             </DictionaryContentProvider>
-          </FavoriteWordsContentProvider>
-        </FavoriteListsContentProvider>
+          </FavoriteWordsContextProvider>
+        </FavoriteListsContextProvider>
       </ThemeContentProvider>
     </AuthProvider>
   </StrictMode>

@@ -25,7 +25,7 @@ import FavoriteWordsContext from "../../hooks/FavoriteWordsContext";
 import DictionaryContext from "../../hooks/DictionaryContext";
 import AuthContext from "../../hooks/AuthContext";
 import { pink } from "@mui/material/colors";
-import { set } from "mongoose";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
   const [inputList, setInputList] = useState(""); // 輸入框的值
   const [mode, setMode] = useState(null);
@@ -50,6 +50,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
     if (word.vocabulary && word.meanings) {
       const curWordData = {
         word: vocabulary,
+        phonetic: phonetics?.text,
         audio: phonetics?.audio,
         meaning: meanings[0]?.definitions[0]?.definition,
       };
@@ -171,16 +172,19 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
             </ListItem>
           ) : (
             <ListItem key={index} disablePadding>
-              <ListItemButton onClick={() => addFavWord(list._id, curWord)}>
+              <ListItemButton
+                key={index}
+                onClick={() => addFavWord(list._id, curWord)}
+              >
                 <ListItemIcon>
                   <Icon />
                 </ListItemIcon>
                 <ListItemText primary={list.name} />
-                {curWordList.map((id) => {
-                  if (id === list._id) {
-                    return <FavoriteIcon sx={heartStyle} />;
-                  }
-                })}
+                {curWordList.includes(list._id) ? (
+                  <FavoriteIcon sx={heartStyle} />
+                ) : (
+                  <FavoriteBorderIcon sx={heartStyle} />
+                )}
               </ListItemButton>
             </ListItem>
           );

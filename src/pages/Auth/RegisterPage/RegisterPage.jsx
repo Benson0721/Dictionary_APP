@@ -7,7 +7,8 @@ import "./RegisterPage.css";
 import { useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../../hooks/AuthContext";
-import { useActionData, useSubmit } from "react-router";
+import { useActionData, useSubmit, Link } from "react-router";
+import Navbar from "../../../components/Navbar/Navbar";
 
 /*export async function action({ request }) {
   const formData = await request.formData();
@@ -64,25 +65,20 @@ export default function RegisterPage() {
   };
 
   return (
-    <>
-      <div className="RegisterPage">
-        {actionData?.error && actionData?.error.length > 0 && (
-          <p
-            className=" text-Orange-1 text-[16px]  text-center"
-            aria-live="polite"
-            role="alert"
-          >
-            {actionData.error}
-          </p>
-        )}
+    <div className="Dictionary__RegisterPage__bg font-Inter">
+      <div className="Dictionary__RegisterPage">
+        <Navbar />
+        <h1 className="Dictionary__RegisterPage__item text-[28px] md:text-[48px] font-extrabold text-Black-3">
+          Register
+        </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <section>
+          <section className="Dictionary__RegisterPage__item">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               {...register("email")}
               placeholder="please input your email..."
-              className={`RegisterPage__input focus-within:outline-Purple-1 ${
+              className={`Dictionary__RegisterPage__input focus-within:outline-Purple-1 ${
                 errors.email && "border-2 border-Orange-1"
               } `}
             />
@@ -96,19 +92,28 @@ export default function RegisterPage() {
               </p>
             )}
           </section>
-          <section>
-            <label htmlFor="username">Username</label>
+          {actionData?.error && actionData?.error.length > 0 && (
+            <p
+              className=" text-Orange-1 text-[16px]  text-center"
+              aria-live="polite"
+              role="alert"
+            >
+              {actionData.error}
+            </p>
+          )}
+          <section className="Dictionary__RegisterPage__item ">
+            <label htmlFor="username">Username: </label>
             <input
               type="text"
               {...register("username")}
-              placeholder="please input your password"
-              className={`RegisterPage__input focus-within:outline-Purple-1 ${
+              placeholder="please input your username..."
+              className={`Dictionary__RegisterPage__input focus-within:outline-Purple-1 ${
                 errors.username && "border-2 border-Orange-1"
               } `}
             />
             {errors.username && (
               <p
-                className=" text-Orange-1 text-[16px]  ml-auto"
+                className="Dictionary__RegisterPage__item__error text-Orange-1 text-[16px] "
                 aria-live="polite"
                 role="alert"
               >
@@ -116,13 +121,13 @@ export default function RegisterPage() {
               </p>
             )}
           </section>
-          <section>
-            <label htmlFor="password">Password</label>
+          <section className="Dictionary__RegisterPage__item ">
+            <label htmlFor="password">Password: </label>
             <input
               type="password"
               {...register("password")}
               placeholder="please input your password..."
-              className={`RegisterPage__input focus-within:outline-Purple-1 ${
+              className={`Dictionary__RegisterPage__input focus-within:outline-Purple-1 ${
                 errors.password && "border-2 border-Orange-1"
               } `}
             />
@@ -136,11 +141,19 @@ export default function RegisterPage() {
               </p>
             )}
           </section>
-          <button className="RegisterPage__button" type="submit">
-            Register
-          </button>
+          <div className="Dictionary__RegisterPage__button__space">
+            <button
+              className="Dictionary__RegisterPage__button font-extrabold bg-purple-500 text-white"
+              type="submit"
+            >
+              Register
+            </button>
+            <button className="Dictionary__RegisterPage__button font-extrabold bg-Black-3 text-white">
+              <Link to={"/login"}>Login</Link>
+            </button>
+          </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }

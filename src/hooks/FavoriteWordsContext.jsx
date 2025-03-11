@@ -13,25 +13,25 @@ export const FavoriteWordsContext = createContext({
   isFav: false,
   setIsFav: () => {},
   currentFavWords: [],
-  allFavoriteWords: [],
   setCurrentFavWords: () => {},
-  fetchCurrentFavWords: () => {},
-  addFavWord: () => {},
-  removeFavWord: () => {},
+  allFavoriteWords: [],
+  fetchCurrentFavWords: async () => {},
+  addFavWord: async () => {},
+  removeFavWord: async () => {},
 });
 
-export const FavoriteWordsContentProvider = (props) => {
+export const FavoriteWordsContextProvider = (props) => {
   const [currentFavWords, setCurrentFavWords] = useState([]);
   const [allFavoriteWords, setAllFavoriteWords] = useState([]);
   const [isFav, setIsFav] = useState(false);
   const { user } = useContext(AuthContext);
-  const { currentList } = useContext(FavoriteListsContext);
+
   const { word } = useContext(DictionaryContext);
-  const fetchCurrentFavWords = async () => {
+  const fetchCurrentFavWords = async (listID) => {
     const user = await localforage.getItem("user");
     if (user) {
       try {
-        const words = await getFavoriteWords(user.id, currentList);
+        const words = await getFavoriteWords(user.id, listID);
         setCurrentFavWords(words);
       } catch (e) {
         console.error(e.message);
@@ -67,26 +67,17 @@ export const FavoriteWordsContentProvider = (props) => {
 
   const removeFavWord = async (listID, wordID) => {
     const user = await localforage.getItem("user");
+    console.log("前端收到:", listID, wordID);
     if (user) {
       try {
         await removeFavoriteWord(user.id, listID, wordID);
-        await fetchCurrentFavWords();
+        await fetchCurrentFavWords(listID);
       } catch (e) {
         console.error(e.message);
-        await fetchCurrentFavWords();
+        await fetchCurrentFavWords(listID);
       }
     }
   };
-
-  useEffect(() => {
-    const handlefetchWords = async () => {
-      await fetchCurrentFavWords();
-    };
-
-    if (currentList && user) {
-      handlefetchWords();
-    }
-  }, [currentList, user]);
 
   useEffect(() => {
     const handleAllWords = async () => {
