@@ -31,7 +31,10 @@ deploy.sh
 design
 .vscode
 
-/src/**/*.scss
+/client/src/**/*.scss
+
+/client/src/**/toggle
+.env
 
 # Editor directories and files
 .vscode/*
