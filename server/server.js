@@ -12,7 +12,7 @@ import LocalStrategy from "passport-local";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
-/*// 獲取當前檔案的路徑
+// 獲取當前檔案的路徑
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,7 +29,7 @@ if (!fs.existsSync(envPath)) {
 const result = dotenv.config({ path: envPath });
 if (result.error) {
   throw new Error(`Failed to load .env: ${result.error.message}`);
-}*/
+}
 
 const DBURL = process.env.DB_URL;
 if (!DBURL) {
@@ -79,7 +79,7 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
-
+app.use(express.static(path.join(__dirname, '../dist')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session(sessionConfig));
@@ -92,6 +92,13 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use("/", UserRoutes);
 app.use("/", FavRoutes);
+
+
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
+
 
 app.listen(port, () => {
   console.log(`Serving on port ${port}`);
