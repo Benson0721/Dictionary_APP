@@ -364,7 +364,7 @@ export default function Navbar() {
     <nav
       ref={menuRef}
       className={`Dictionary__navbar ${
-        isNight ? "text-white" : "text-Black-3"
+        isNight ? "bg-Black-3 text-white" : "bg-white text-Black-3"
       }  transition duration-400 ease-in-out`}
     >
       <img
@@ -380,11 +380,15 @@ export default function Navbar() {
         />
       )}
       <div
-        className={`Dictionary__navbar__space ${
+        className={`Dictionary__navbar__space 
+          ${
+            isNight ? "bg-Black-3 " : "bg-white "
+          }
+          ${
           isOpen
             ? "Dictionary__navbar__space--open"
             : "Dictionary__navbar__space--close"
-        } ${isNight ? "" : "bg-white"}
+        } 
         `}
       >
         {getNavItems().map((item, index) => (

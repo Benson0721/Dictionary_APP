@@ -18,7 +18,7 @@ import avatar from "../../assets/images/emojinoko.jpg";
 import { FavWordHeading } from "../../components/Headings";
 import { useMediaQuery } from "@mui/material";
 const ListDrawer = ({ isOpen, setIsOpen, user }) => {
-  const { lists, fetchLists, setCurrentList } =
+  const { lists, fetchLists, setCurrentList,setLists } =
     useContext(FavoriteListsContext);
 
   const { isNight } = useContext(ThemeContext);
@@ -55,7 +55,7 @@ const ListDrawer = ({ isOpen, setIsOpen, user }) => {
     };
 
     handleLoading();
-  }, [lists, fetchLists]);
+  }, [lists, fetchLists,setLists]);
 
   /* useEffect(() => {
     const handleClickOutside = (event) => {
@@ -132,7 +132,7 @@ const ListDrawer = ({ isOpen, setIsOpen, user }) => {
 
 export default function FavoritePage() {
   const { currentList, setCurrentList } = useContext(FavoriteListsContext);
-  const { currentFavWords, removeFavWord, fetchCurrentFavWords } =
+  const { currentFavWords, removeFavWord, fetchCurrentFavWords,setCurrentFavWords } =
     useContext(FavoriteWordsContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
   const [isOpen, setIsOpen] = useState(false);
@@ -148,7 +148,7 @@ export default function FavoritePage() {
     };
 
     handleLoading();
-  }, [currentFavWords, removeFavWord]);
+  }, [currentFavWords, removeFavWord,setCurrentFavWords]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -207,11 +207,6 @@ export default function FavoritePage() {
                 >
                   Select your favorite list
                 </h1>
-                {isMobile ? (
-                  <button onClick={() => setIsOpen(true)}>Open Lists</button>
-                ) : (
-                  ""
-                )}
               </>
             )}
             <Divider />

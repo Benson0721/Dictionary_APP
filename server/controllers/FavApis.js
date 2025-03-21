@@ -22,7 +22,7 @@ export const getAllFavoriteWords = async (req, res) => {
   }
   try {
     const { userID } = req.params;
-    const allFavWords = await FavoriteWord.find({ user: userID });
+    const allFavWords = await FavoriteWord.find({ users: { $in: [userID] } });
     res.json(allFavWords);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,7 +41,7 @@ export const addFavoriteWord = async (req, res) => {
       //防止重複創建單字，只增加listID
       const updatedWord = await FavoriteWord.findByIdAndUpdate(
         existWord._id,
-        { $addToSet: { favoriteLists: listID } }, // 防止重複加入
+        { $addToSet: { favoriteLists: listID, users: userID } }, // 防止重複加入
         { new: true }
       );
       await FavoriteLists.findByIdAndUpdate(listID, {
@@ -52,7 +52,7 @@ export const addFavoriteWord = async (req, res) => {
       const favWord = await FavoriteWord.create({
         ...newWord,
         favoriteLists: [listID],
-        user: userID, //陣列處理方式
+        users: [userID], //陣列處理方式
       });
       await FavoriteLists.findByIdAndUpdate(listID, {
         $addToSet: { favoriteWords: favWord._id },

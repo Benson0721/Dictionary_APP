@@ -16,8 +16,10 @@ import MongoStore from "connect-mongo";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 動態解析 .env 的絕對路徑
-/*const envPath = path.resolve(__dirname, "../.env");
+
+if (process.env.NODE_ENV !== 'production') {
+  // 動態解析 .env 的絕對路徑
+const envPath = path.resolve(__dirname, "../.env");
 console.log("Loading .env from:", envPath);
 
 // 檢查 .env 檔案是否存在
@@ -29,7 +31,9 @@ if (!fs.existsSync(envPath)) {
 const result = dotenv.config({ path: envPath });
 if (result.error) {
   throw new Error(`Failed to load .env: ${result.error.message}`);
-}*/
+}
+}
+
 
 const DBURL = process.env.DB_URL;
 if (!DBURL) {
@@ -97,6 +101,8 @@ if (process.env.NODE_ENV === 'production') {
   app.use("/", UserRoutes);
   app.use("/", FavRoutes);
 }
+/*app.use("/api", UserRoutes);
+app.use("/api", FavRoutes);*/
 
 
 

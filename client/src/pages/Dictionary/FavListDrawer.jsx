@@ -54,7 +54,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
       };
 
       setCurWord(curWordData);
-
+      console.log(allFavoriteWords);
       setIsFav(() =>
         allFavoriteWords?.some((fav) => fav.word === word.vocabulary)
           ? true

@@ -27,7 +27,7 @@ export const FavoriteWordsContextProvider = (props) => {
   const [isFav, setIsFav] = useState(false);
   const { user } = useContext(AuthContext);
 
-  const { word } = useContext(DictionaryContext);
+
   const fetchCurrentFavWords = async (listID) => {
     const user = await localforage.getItem("user");
     if (user) {
@@ -41,9 +41,11 @@ export const FavoriteWordsContextProvider = (props) => {
   };
   const fetchAllFavWords = async () => {
     const user = await localforage.getItem("user");
+    console.log(user);
     if (user) {
       try {
         const words = await getAllFavoriteWords(user.id);
+        console.log(words);
         setAllFavoriteWords(words);
       } catch (e) {
         console.error(e.message);
@@ -68,6 +70,9 @@ export const FavoriteWordsContextProvider = (props) => {
     const user = await localforage.getItem("user");
     if (user) {
       try {
+        setCurrentFavWords((prev) =>
+          prev.filter((word) => word.id !== wordID)
+        );
         await removeFavoriteWord(user.id, listID, wordID);
         await fetchCurrentFavWords(listID);
       } catch (e) {

@@ -3,11 +3,9 @@
 }
 .Dictonary__playButton__icon:hover circle {
   opacity: 1;
-  -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
 }
 .Dictonary__playButton__icon:hover path {
   fill: white;
-  -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
-}
+}/*# sourceMappingURL=AudioPlayer.css.map */

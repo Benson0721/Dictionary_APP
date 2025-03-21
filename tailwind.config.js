@@ -2,9 +2,8 @@
 export default {
   // These paths are just examples, customize them to match your project structure
   content: [
-    "./src/**/**/*.{html,js,jsx,ts,tsx,css,scss}",
-    "./src/components/**/*.{html,js,jsx,ts,tsx,css,scss}",
     "./index.html",
+    "./client/src/**/**/*.{html,js,jsx,ts,tsx,css,scss}",
   ],
   theme: {
     extend: {

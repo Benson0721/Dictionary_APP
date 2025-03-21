@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "bulid:css": "postcss src/css/index.css --dir ./src/css && postcss src/css/GridSesctions.css --dir ./src/css && postcss src/css/Section.css --dir ./src/css ",
-    "tailwind:css": "npx tailwindcss -i ./src/assets/css/tailwind.css -o ./src/assets/css/generated-tailwind.css --watch",
+    "tailwind:css": "npx tailwindcss -i ./client/src/assets/css/tailwind.css -o ./client/src/assets/css/generated-tailwind.css --watch",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "start": "npm run server"
