@@ -33,7 +33,6 @@ const ListDrawer = ({ isOpen, setIsOpen, user }) => {
     boxSizing: "border-box",
     position: "absolute",
     left: 0,
-    height: "100vh",
     color: isNight ? "white" : "#2d2d2d",
     backgroundColor: isNight ? "#2d2d2d" : "white",
     transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out",

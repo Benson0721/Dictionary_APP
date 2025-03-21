@@ -4,8 +4,12 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "./",
   plugins: [react(), nodePolyfills()],
-  root: "client", // 告訴 Vite 根目錄是 client
+  build: {
+    outDir: "./dist", // 將構建輸出到 DICTIONARY APP/dist/
+    emptyOutDir: true, // 清空目標目錄
+  },
   server: {
     port: 5173,
     open: true, // 自動打開瀏覽器

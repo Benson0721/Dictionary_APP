@@ -46,13 +46,12 @@ export const updateFavoriteLists = async (req, res) => {
   const bulkOps = listUpdates.map((update) => ({
     updateOne: {
       filter: { _id: update.listId },
-      update: { $set: { icon: update.icon, name: update.name } }, 
+      update: { $set: { icon: update.icon, name: update.name } },
     },
   }));
   try {
     await FavoriteLists.bulkWrite(bulkOps);
 
-   
     const updatedLists = await FavoriteLists.find({});
     return res.json({ success: true, lists: updatedLists });
   } catch (error) {

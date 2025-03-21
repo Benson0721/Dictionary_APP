@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function WordHistory({ history, searchByClick }) {
   return (
     <nav className="w-full mb-3 md:mb-10">

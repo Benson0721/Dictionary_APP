@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-
-dotenv.config({ path: ".env" });
-
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 import mongoose from "mongoose";
 import { User } from "./models/UserSchema.js";
 import { router as UserRoutes } from "./routes/UserRoutes.js";
@@ -11,13 +11,34 @@ import express from "express";
 import LocalStrategy from "passport-local";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-const DBURL ="mongodb+srv://Mpass:L7WjqSLuzZNZ1QO2@dictionary.zh8rh.mongodb.net/?retryWrites=true&w=majority&appName=dictionary";
-/*console.log(process.env.DB_URL);
-console.log(process.env);*/
+
+// 獲取當前檔案的路徑
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// 動態解析 .env 的絕對路徑
+const envPath = path.resolve(__dirname, "../.env");
+console.log("Loading .env from:", envPath);
+
+// 檢查 .env 檔案是否存在
+if (!fs.existsSync(envPath)) {
+  throw new Error(`.env file not found at: ${envPath}`);
+}
+
+// 加載環境變數
+const result = dotenv.config({ path: envPath });
+if (result.error) {
+  throw new Error(`Failed to load .env: ${result.error.message}`);
+}
+
+const DBURL = process.env.DB_URL;
+if (!DBURL) {
+  throw new Error("DB_URL is not defined in .env");
+}
 
 const connectToDB = async () => {
   try {
-    mongoose.connect(DBURL);
+    await mongoose.connect(DBURL);
     console.log("connection successful");
   } catch (err) {
     console.error(err);
@@ -40,16 +61,16 @@ const store = MongoStore.create({
 
 store.on("error", function (e) {
   console.log("Session Store Error", e);
-}); // use for logginger)
+});
 
 const app = express();
-const port = 5000;
+const port = process.env.port;
 const sessionConfig = {
   store,
   name: "session",
   secret: "thisismysecert",
   resave: false,
-  saveUninitialized: false, // 這樣 passport 只會在登入後儲存 session
+  saveUninitialized: false,
   unset: "destroy",
   cookie: {
     httpOnly: true,
@@ -61,15 +82,11 @@ const sessionConfig = {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(session(sessionConfig)); //開啟session儲存登入狀態
-
-app.use(passport.initialize()); //啟動passport功能
+app.use(session(sessionConfig));
+app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy(User.authenticate()));
-
-// use static serialize and deserialize of model for passport session support
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
