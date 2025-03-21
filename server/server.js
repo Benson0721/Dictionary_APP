@@ -13,8 +13,8 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 
 // 獲取當前檔案的路徑
-/*const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);*/
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // 動態解析 .env 的絕對路徑
 /*const envPath = path.resolve(__dirname, "../.env");
