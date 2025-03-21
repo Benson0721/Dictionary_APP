@@ -1,7 +1,7 @@
-import dotenv from "dotenv";
+/*import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
+import fs from "fs";*/
 import mongoose from "mongoose";
 import { User } from "./models/UserSchema.js";
 import { router as UserRoutes } from "./routes/UserRoutes.js";
@@ -12,7 +12,7 @@ import LocalStrategy from "passport-local";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
-// 獲取當前檔案的路徑
+/*// 獲取當前檔案的路徑
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -29,7 +29,7 @@ if (!fs.existsSync(envPath)) {
 const result = dotenv.config({ path: envPath });
 if (result.error) {
   throw new Error(`Failed to load .env: ${result.error.message}`);
-}
+}*/
 
 const DBURL = process.env.DB_URL;
 if (!DBURL) {
@@ -94,7 +94,7 @@ app.use("/", UserRoutes);
 app.use("/", FavRoutes);
 
 app.listen(port, () => {
-  console.log(`Serving on port ${port}`);
+  console.log(`Serving on port`);
 });
 
 app.on("error", (err) => {
