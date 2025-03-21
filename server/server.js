@@ -1,7 +1,7 @@
-/*import dotenv from "dotenv";
+import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";*/
+import fs from "fs";
 import mongoose from "mongoose";
 import { User } from "./models/UserSchema.js";
 import { router as UserRoutes } from "./routes/UserRoutes.js";
