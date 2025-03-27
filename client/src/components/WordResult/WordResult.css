@@ -1,0 +1,20 @@
+.Dictionary__definition {
+  margin-bottom: 20px;
+}
+.Dictionary__definition__hr {
+  padding-bottom: 12px;
+  flex-grow: 20;
+}
+
+@media only screen and (min-width: 768px) {
+  .Dictionary__definition__hr {
+    width: 608px;
+    height: 1px;
+  }
+}
+@media only screen and (min-width: 1440px) {
+  .Dictionary__definition__hr {
+    width: 656px;
+    height: 1px;
+  }
+}/*# sourceMappingURL=WordResult.css.map */

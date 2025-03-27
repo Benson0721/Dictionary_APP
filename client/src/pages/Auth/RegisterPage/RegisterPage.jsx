@@ -7,7 +7,7 @@ import AuthContext from "../../../hooks/AuthContext";
 import { useActionData, useSubmit } from "react-router";
 import Navbar from "../../../../src/components/Navbar/Navbar";
 import localforage from "localforage";
-import "./RegisterPage.scss";
+import "./RegisterPage.css";
 
 export default function RegisterPage() {
   const {

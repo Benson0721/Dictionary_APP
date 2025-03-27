@@ -1,0 +1,63 @@
+.Dictionary__RegisterPage {
+  width: clamp(327px, 84%, 689px);
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+  padding: 0px 28px;
+}
+.Dictionary__RegisterPage__bg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Dictionary__RegisterPage__input {
+  width: 100%;
+  height: 64px;
+  font-size: 16px;
+  border: 1px solid #a445ed;
+  border-radius: 16px;
+  padding-left: 30px;
+}
+.Dictionary__RegisterPage__item {
+  margin-bottom: 36px;
+}
+.Dictionary__RegisterPage__button {
+  flex-grow: 1;
+  margin: 0px 16px;
+  border-radius: 16px;
+  padding: 10px 0px;
+  margin-top: 16px;
+}
+.Dictionary__RegisterPage__button__space {
+  display: flex;
+  justify-content: space-around;
+  margin: 72px 0px;
+}
+
+@media only screen and (min-width: 768px) {
+  .Dictionary__RegisterPage {
+    padding: 0px 56px;
+    width: clamp(689px, 89%, 737px);
+  }
+  .Dictionary__RegisterPage__input {
+    width: 100%;
+  }
+  .Dictionary__RegisterPage__button {
+    margin: 0px 16px;
+    max-width: 350px;
+  }
+}
+@media only screen and (min-width: 1440px) {
+  .Dictionary__RegisterPage {
+    padding: 0px 104px;
+    width: clamp(925px, 84%, 1200px);
+  }
+  .Dictionary__RegisterPage__input {
+    width: 100%;
+  }
+  .Dictionary__RegisterPage__button {
+    margin: 0px 16px;
+    max-width: 280px;
+  }
+}/*# sourceMappingURL=RegisterPage.css.map */
