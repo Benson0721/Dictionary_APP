@@ -7,7 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router";
 import logo from "../../assets/icons/logo.svg";
 import moon from "../../assets/icons/icon-moon.svg";
 import selectToggle from "../../assets/icons/selector.svg";
-import "./Navbar.scss";
+import "./Navbar.css";
 
 function DayNightToggle() {
   const { isNight, setIsNight } = useContext(ThemeContext);

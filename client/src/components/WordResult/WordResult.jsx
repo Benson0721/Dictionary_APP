@@ -1,6 +1,6 @@
 import { HeadingM, HeadingS, HeadingS_a } from "../Headings";
 import { BodyM, BodyM_Gray } from "../Bodys";
-import "./WordResult.scss";
+import "./WordResult.css";
 
 export function ScuccessData({ data, searchByClick }) {
   const { partOfSpeech, definitions, synonyms, antonyms } = data;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 //import Play from "../../assets/images/icon-play.svg";
-import "./AudioPlayer.scss";
+import "./AudioPlayer.css";
 
 
 export default function AudioPlayer({ audioSrc }) {
