@@ -5,9 +5,9 @@ import { LoginRule } from "../../../../src/utils/Rules";
 import { useNavigate } from "react-router";
 import AuthContext from "../../../hooks/AuthContext";
 import localforage from "localforage";
-import { useSubmit, useActionData, Link } from "react-router";
+import { useSubmit, useActionData } from "react-router";
 import Navbar from "../../../../src/components/Navbar/Navbar";
-import "./LoginPage.css";
+import "./LoginPage.scss";
 
 export default function LoginPage() {
   const {

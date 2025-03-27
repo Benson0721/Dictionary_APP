@@ -15,7 +15,7 @@ import { fetchWordData } from "../../apis/fetchWordData.js";
 import WordHistory from "../../../src/components/WordHistory.jsx";
 import AuthContext from "../../hooks/AuthContext.jsx";
 
-import "./Dictionary.css";
+import "./Dictionary.scss";
 
 export default function Dictionary() {
   const { word, WordHandler } = useContext(DictionaryContext); //get word and handler by using useContent

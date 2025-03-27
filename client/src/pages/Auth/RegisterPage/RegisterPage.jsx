@@ -4,10 +4,10 @@ import { RegisterRule } from "../../../../src/utils/Rules";
 import { useNavigate } from "react-router";
 import { useContext, useEffect } from "react";
 import AuthContext from "../../../hooks/AuthContext";
-import { useActionData, useSubmit, Link } from "react-router";
+import { useActionData, useSubmit } from "react-router";
 import Navbar from "../../../../src/components/Navbar/Navbar";
 import localforage from "localforage";
-import "./RegisterPage.css";
+import "./RegisterPage.scss";
 
 export default function RegisterPage() {
   const {

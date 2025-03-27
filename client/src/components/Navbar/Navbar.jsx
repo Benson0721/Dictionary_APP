@@ -7,7 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router";
 import logo from "../../assets/icons/logo.svg";
 import moon from "../../assets/icons/icon-moon.svg";
 import selectToggle from "../../assets/icons/selector.svg";
-import "./Navbar.css";
+import "./Navbar.scss";
 
 function DayNightToggle() {
   const { isNight, setIsNight } = useContext(ThemeContext);
@@ -283,7 +283,7 @@ function Settings({ isNight, setFont, font, isMobile }) {
 export default function Navbar() {
   const { isLoggedIn, user, logout } = useContext(AuthContext);
   const { isNight } = useContext(ThemeContext);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
   const location = useLocation();

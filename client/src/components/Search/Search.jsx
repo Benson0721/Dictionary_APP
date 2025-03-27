@@ -6,7 +6,7 @@ import DictionaryContext from "../../hooks/DictionaryContext.jsx";
 import ThemeContext from "../../hooks/ThemeContext.jsx";
 import { fetchWordData } from "../../apis/fetchWordData.js";
 import { useContext, useEffect } from "react";
-import "./Search.css";
+import "./Search.scss";
 
 export default function Search({ setIsSuccess, currentSearch, handleSearch }) {
   const {

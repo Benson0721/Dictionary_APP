@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
-import "./FrontPage.css";
+import "./FrontPage.scss";
 import { useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";

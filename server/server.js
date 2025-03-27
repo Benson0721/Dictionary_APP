@@ -101,8 +101,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use("/", UserRoutes);
   app.use("/", FavRoutes);
 }
-/*app.use("/api", UserRoutes);
-app.use("/api", FavRoutes);*/
+
 
 
 

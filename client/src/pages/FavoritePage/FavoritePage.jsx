@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import FavoriteListsContext from "../../hooks/FavoriteListsContext";
 import FavoriteWordsContext from "../../hooks/FavoriteWordsContext";
-import "./FavoritePage.css";
+import "./FavoritePage.scss";
 import * as Icons from "@mui/icons-material";
 import AudioPlayer from "../../components/AudioPlayer/AudioPlayer";
 import Navbar from "../../components/Navbar/Navbar";
