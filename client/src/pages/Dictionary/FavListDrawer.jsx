@@ -77,34 +77,32 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
       if (foundFav) {
         setCurWordList(foundFav.favoriteLists);
       } else {
-        setCurWordList([]); // 若未找到，清空 curWordList
+        setCurWordList([]);
       }
     }
   }, [word, allFavoriteWords]);
 
   const handleCreate = async (name, icon) => {
-    await addLists({ name, icon });
     setInputList("");
     setMode(null);
     setSelectedIcon(null);
+    await addLists({ name, icon });
   };
   const handleEdit = async (updatedLists) => {
-    await updateLists(updatedLists);
     setInputList("");
     setMode(null);
     setSelectedIcon(null);
-  };
+    await updateLists(updatedLists);
 
-  // 取消新增
+};
+
   const handleCancel = () => {
     setMode(null);
     setInputList("");
     setSelectedIcon(null);
   };
-  const handleDelete = (id) => {
-    deleteLists(id);
-    setInputList("");
-    setSelectedIcon(null);
+  const handleDelete = async (id) => {
+    await deleteLists(id);
   };
 
   const heartStyle = {
@@ -145,9 +143,7 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
                   onChange={(e) =>
                     setLists((prevLists) =>
                       prevLists.map((item) =>
-                        item._id === list._id
-                          ? { ...item, name: e.target.value }
-                          : item
+                        item._id === list._id ? { ...item, name: e.target.value } : item
                       )
                     )
                   }

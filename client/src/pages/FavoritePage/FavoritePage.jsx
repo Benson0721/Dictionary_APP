@@ -57,21 +57,6 @@ const ListDrawer = ({ isOpen, setIsOpen, user }) => {
     handleLoading();
   }, [lists, fetchLists,setLists]);
 
-  /* useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isMobile) {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setIsOpen(false);
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);*/
-
   return (
     <Drawer
       sx={{
@@ -84,23 +69,7 @@ const ListDrawer = ({ isOpen, setIsOpen, user }) => {
       onClose={() => setIsOpen(false)}
       ref={menuRef}
     >
-      <Divider />
-      {isMobile ? (
-        <></>
-      ) : (
-        <ListItem>
-          <ListItemIcon>
-            <img
-              className="Dictionary__navbar-interface__avatar"
-              src={avatar}
-              alt="avatar"
-            />
-          </ListItemIcon>
-          {user.username}
-        </ListItem>
-      )}
-
-      <Divider />
+     <hr />
       <List>
         {isLoading ? (
           <div>Loading...</div>
@@ -125,7 +94,7 @@ const ListDrawer = ({ isOpen, setIsOpen, user }) => {
           })
         )}
       </List>
-      <Divider />
+   
     </Drawer>
   );
 };
@@ -209,7 +178,7 @@ export default function FavoritePage() {
                 </h1>
               </>
             )}
-            <Divider />
+           <hr className="mt-3"/>
             <ul className="Dictionary__favoritePage__list">
               {isLoading ? (
                 <></>

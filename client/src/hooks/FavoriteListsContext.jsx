@@ -79,9 +79,10 @@ export const FavoriteListsContextProvider = (props) => {
   const deleteLists = async (listID) => {
     const user = await localforage.getItem("user");
     if (user) {
-      setLists((prevLists) => prevLists.filter((list) => list.id !== listID));
-
       try {
+        setLists((prevLists) => prevLists.filter((list) => list.id !== listID));
+
+
         await deleteFavoriteList(user.id, listID);
         await fetchLists();
       } catch (e) {

@@ -7,7 +7,7 @@ import {
 } from "../apis/FavoriteWordsApi";
 import localforage from "localforage";
 import AuthContext from "./AuthContext";
-import DictionaryContext from "./DictionaryContext";
+
 
 
 export const FavoriteWordsContext = createContext({
@@ -57,6 +57,8 @@ export const FavoriteWordsContextProvider = (props) => {
 
     if (user) {
       try {
+
+
         await addFavoriteWord(user.id, listID, newWord);
         await fetchAllFavWords();
       } catch (e) {

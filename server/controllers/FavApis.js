@@ -5,8 +5,9 @@ export const getFavoriteWords = async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+
+  const { listID } = req.params;
   try {
-    const { listID } = req.params;
     const favWords = await FavoriteWord.find({
       favoriteLists: { $in: [listID] },
     });

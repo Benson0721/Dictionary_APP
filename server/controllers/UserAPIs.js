@@ -11,7 +11,7 @@ export const logout = (req, res) => {
       if (err) {
         return next(err);
       }
-      res.clearCookie("connect.sid"); // 確保 session cookie 被刪除
+      res.clearCookie("connect.sid");
       res.json({ message: "Logged out" });
     });
   });

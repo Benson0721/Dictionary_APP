@@ -31,14 +31,13 @@ export const deleteFavoriteList = async (userID, listID) => {
 };
 
 export const updateFavoriteLists = async (userID, updatedLists) => {
-  //可是用於一筆或大量更新
   try {
     const res = await axios.patch(
       `${baseURL}/api/${userID}/lists`,
       {
         listUpdates: updatedLists.map((list) => ({
           listId: list._id,
-          icon: list.icon, // 你要更新的字段
+          icon: list.icon,
           name: list.name,
         })),
       },
