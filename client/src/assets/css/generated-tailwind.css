@@ -855,6 +855,10 @@ body {
   font-family: Inter, sans-serif;
 }
 
+.font-Incons {
+  font-family: Inconsolata, sans-serif;
+}
+
 .text-\[12px\] {
   font-size: 12px;
 }

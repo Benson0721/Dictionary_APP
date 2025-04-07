@@ -85,7 +85,7 @@ export default function Dictionary() {
 
   return (
     <div className={`Dictionary-bg ${isNight ? "bg-Black-1 t" : "bg-white"}`}>
-      <main className={`Dictionary font-${font}`}>
+      <main className={`Dictionary font-${font} `}>
         <FavListDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
         <Navbar />
         <Search
