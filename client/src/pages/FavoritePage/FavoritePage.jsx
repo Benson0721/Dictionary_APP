@@ -183,10 +183,10 @@ export default function FavoritePage() {
               {isLoading ? (
                 <></>
               ) : (
-                currentFavWords.map((favWord, index) => (
+                currentFavWords.map((favWord) => (
                   <>
                     <li
-                      key={index}
+                      key={favWord._id}
                       className="Dictionary__favoritePage__list__item"
                     >
                       <AudioPlayer audioSrc={favWord.audio} />

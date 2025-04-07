@@ -121,10 +121,10 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
       role="presentation"
     >
       <List>
-        {lists?.map((list, index) => {
+        {lists?.map((list) => {
           const Icon = Icons[list?.icon];
           return mode === "edit" ? (
-            <ListItem disablePadding key={index}>
+            <ListItem disablePadding key={list._id}>
               <ListItemButton>
                 <ListItemIcon>
                   <IconButton
