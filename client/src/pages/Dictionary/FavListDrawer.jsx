@@ -60,17 +60,6 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
           ? true
           : false
       );
-      /*allFavoriteWords.map((fav) => {//map會遍歷所有單字，造成setcurwordlist重複調用失去值
-        if (fav.word === word.vocabulary) {
-          console.log("已是收藏單字");
-          console.log(fav.favoriteLists);
-          setCurWordList(fav.favoriteLists);
-          console.log(curWordList);
-        } else {
-          setCurWordList([]);
-        }
-       
-      });*/
       const foundFav = allFavoriteWords?.find(
         (fav) => fav.word === word.vocabulary
       );
@@ -159,9 +148,8 @@ export default function FavListDrawer({ openDrawer, setOpenDrawer }) {
               </ListItemButton>
             </ListItem>
           ) : (
-            <ListItem key={index} disablePadding>
+            <ListItem key={list._id} disablePadding>
               <ListItemButton
-                key={index}
                 onClick={() => addFavWord(list._id, curWord)}
               >
                 <ListItemIcon>
